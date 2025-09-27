@@ -19,7 +19,7 @@ function createWindow(): void {
     icon: path.join(__dirname, './assets/logo.png'),
   });
 
-  nativeTheme.themeSource = 'light'; 
+  nativeTheme.themeSource = 'light';
 
   // Vite dev server URL
 
@@ -41,6 +41,7 @@ app.whenReady().then((): void => {
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
+    a;
   }
 });
 
