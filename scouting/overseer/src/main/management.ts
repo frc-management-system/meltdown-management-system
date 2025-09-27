@@ -13,73 +13,85 @@ export function management() {
   let eventName: string = '';
   let matchLogPath: string = '';
 
-  function generateMatchData<eventType>(savePath: string) {
-    const fileNames: string[] = fs.readdirSync(matchLogPath);
+  function generateMatchData<eventType>(savePath: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      try {
+        const fileNames: string[] = fs.readdirSync(matchLogPath);
 
-    const matches: TLog<eventType>[] = fileNames.map((fileName: string): TLog<eventType> => {
-      const jsonBuffer: Buffer = fs.readFileSync(path.resolve(matchLogPath, fileName));
-      const jsonString: string = jsonBuffer.toString();
-      return JSON.parse(jsonString);
+        const matches: TLog<eventType>[] = fileNames.map((fileName: string): TLog<eventType> => {
+          const jsonBuffer: Buffer = fs.readFileSync(path.resolve(matchLogPath, fileName));
+          const jsonString: string = jsonBuffer.toString();
+          return JSON.parse(jsonString);
+        });
+
+        matches.sort((a: TLog<eventType>, b: TLog<eventType>): number => {
+          if (a.matchNum > b.matchNum) {
+            return 1;
+          }
+
+          if (a.matchNum < b.matchNum) {
+            return -1;
+          }
+
+          if (a.alliance.toUpperCase() === 'BLUE' && b.alliance.toUpperCase() === 'RED') {
+            return 1;
+          }
+
+          if (a.alliance.toUpperCase() === 'RED' && b.alliance.toUpperCase() === 'BLUE') {
+            return -1;
+          }
+
+          if (a.alliancePos > b.alliancePos) {
+            return 1;
+          }
+
+          if (a.alliancePos < b.alliancePos) {
+            return -1;
+          }
+
+          return 0;
+        });
+
+        const repetitiveHeaders: Array<keyof TLog<{}>> = [
+          'matchNum',
+          'alliance',
+          'alliancePos',
+          'teamNum',
+        ];
+
+        const eventHeaders: string[] = yearConfig(app.getVersion()).eventKeys;
+
+        const headers: string[] = (repetitiveHeaders as string[]).concat(eventHeaders);
+
+        const stream: WriteStream = fs.createWriteStream(savePath);
+
+        stream.on('error', (err) => reject(err));
+        stream.on('finish', () => resolve());
+
+        stream.write(headers.join(',') + '\n');
+
+        matches.forEach((match: TLog<eventType>) => {
+          match.events.forEach((event: Partial<eventType>): void => {
+            const row: unknown[] = [];
+
+            repetitiveHeaders.forEach((header: keyof TLog<eventType>): number =>
+              row.push(match[header] ?? '')
+            );
+
+            eventHeaders.forEach((header): number =>
+              row.push(event[header as keyof eventType] ?? '')
+            );
+
+            stream.write(row.join(',') + '\n');
+          });
+        });
+
+        stream.end();
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
     });
-
-    matches.sort((a: TLog<eventType>, b: TLog<eventType>): number => {
-      if (a.matchNum > b.matchNum) {
-        return 1;
-      }
-
-      if (a.matchNum < b.matchNum) {
-        return -1;
-      }
-
-      if (a.alliance.toUpperCase() === 'BLUE' && b.alliance.toUpperCase() === 'RED') {
-        return 1;
-      }
-
-      if (a.alliance.toUpperCase() === 'RED' && b.alliance.toUpperCase() === 'BLUE') {
-        return -1;
-      }
-
-      if (a.alliancePos > b.alliancePos) {
-        return 1;
-      }
-
-      if (a.alliancePos < b.alliancePos) {
-        return -1;
-      }
-
-      return 0;
-    });
-
-    const repetitiveHeaders: Array<keyof TLog<{}>> = [
-      'matchNum',
-      'alliance',
-      'alliancePos',
-      'teamNum',
-    ];
-
-    const eventHeaders: string[] = yearConfig(app.getVersion()).eventKeys;
-
-    const headers: string[] = (repetitiveHeaders as string[]).concat(eventHeaders);
-
-    const stream: WriteStream = fs.createWriteStream(savePath);
-
-    stream.write(headers.join(',') + '\n');
-
-    matches.forEach((match: TLog<eventType>) => {
-      match.events.forEach((event: Partial<eventType>): void => {
-        const row: unknown[] = [];
-
-        repetitiveHeaders.forEach((header: keyof TLog<eventType>): number =>
-          row.push(match[header] ?? '')
-        );
-
-        eventHeaders.forEach((header): number => row.push(event[header as keyof eventType] ?? ''));
-
-        stream.write(row.join(',') + '\n');
-      });
-    });
-
-    stream.end();
   }
 
   ipcMain.handle(EApi.exportMatches, async <eventType>(): Promise<void> => {
@@ -93,7 +105,7 @@ export function management() {
     if (saveInfo.canceled || savePath === undefined) {
       return;
     }
-    generateMatchData<eventType>(savePath);
+    await generateMatchData<eventType>(savePath);
   });
 
   ipcMain.handle(
@@ -307,7 +319,7 @@ export function management() {
 
       const tempFile = path.resolve(tmpdir(), 'matchData.csv');
 
-      generateMatchData<eventType>(tempFile);
+      await generateMatchData<eventType>(tempFile);
 
       const client = new S3Client({
         region: 'us-east-2',
