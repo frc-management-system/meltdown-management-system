@@ -35,7 +35,8 @@
     "react-native-svg": "14.1.0",
     "react-native-vision-camera": "^3.7.1",
     "react-native-web": "~0.19.12",
-    "react-native-zip-archive": "^6.1.0"
+    "react-native-zip-archive": "^6.1.0",
+    "@gorhom/bottom-sheet": "5"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
