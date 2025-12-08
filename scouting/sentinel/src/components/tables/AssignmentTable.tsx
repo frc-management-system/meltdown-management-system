@@ -12,21 +12,6 @@ export function AssignmentTable(): React.JSX.Element {
 
   const assignment: TAssignment = useAssignment();
 
-  // hooks
-  const sheetRef = useRef<BottomSheet>(null);
-
-  // variables
-  const data = useMemo(
-    () =>
-      Array(50)
-        .fill(0)
-        .map((_, index) => `index-${index}`),
-    []
-  );
-
-  const onConfirm = () => {
-    sheetRef.current.expand();
-  };
 
   const scouterName: string = assignment?.currentMatch.scouter ?? '';
   const teamNum: number = assignment?.currentMatch.teamNum ?? 0;
@@ -37,15 +22,6 @@ export function AssignmentTable(): React.JSX.Element {
     React.useCallback(() => {
       setCurrentMatchNum(assignment.currentMatch.matchNum);
     }, [assignment.currentMatch])
-  );
-
-  const renderItem = useCallback(
-    ({ item }) => (
-      <Box>
-        <Text>{item}</Text>
-      </Box>
-    ),
-    []
   );
 
   return (
@@ -87,10 +63,6 @@ export function AssignmentTable(): React.JSX.Element {
           </DataTable.Cell>
         </DataTable.Row>
       </DataTable>
-      <Button title="PRESS" variant="contained" onPress={onConfirm} />
-      <BottomSheet ref={sheetRef} snapPoints={['50%']} enableDynamicSizing={false}>
-        <BottomSheetFlatList data={data} keyExtractor={(i) => i} renderItem={renderItem} />
-      </BottomSheet>
     </>
   );
 }

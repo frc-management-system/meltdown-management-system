@@ -20,7 +20,6 @@ const NavStack = createNativeStackNavigator<TRootStackParamList>();
 function App() {
   return (
     <>
-      <GestureHandlerRootView>
         <TimerProvider>
           <StatusBar hidden={true} />
           <AssignmentProvider>
@@ -71,7 +70,6 @@ function App() {
             </LogProvider>
           </AssignmentProvider>
         </TimerProvider>
-      </GestureHandlerRootView>
     </>
   );
 }
