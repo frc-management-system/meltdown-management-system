@@ -8,4 +8,5 @@ export type TRootStackParamList = {
   Teleop: { initialRobotState: ERobotState };
   Endgame: { clearAlgae: number };
   QRShow: { routeName: keyof TRootStackParamList; path: string };
+  EditAssignment: undefined;
 };

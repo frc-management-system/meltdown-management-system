@@ -77,5 +77,14 @@ export const assignmentReducer: React.Reducer<TAssignment, TAssignmentAction> = 
       );
       assignment.currentMatch = nextMatch;
       return assignment;
+    case EAssignmentActionType.edit:
+      const selectedMatch: TAssignmentMatch | undefined = assignment.matches.find(
+        (x: TAssignmentMatch) => x.matchNum === (action.editData?.matchNum ?? 0)
+      );
+      if (selectedMatch) {
+        selectedMatch.scouter = action.editData?.scouter ?? selectedMatch.scouter;
+      }
+      assignment.currentMatch = selectedMatch ?? assignment.currentMatch;
+      return assignment;
   }
 };

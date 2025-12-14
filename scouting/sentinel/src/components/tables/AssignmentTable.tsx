@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { TAssignment } from '../../../../common/types';
 import { useAssignment } from '../../contexts/AssignmentContext';
 import { DataTable } from 'react-native-paper';
-import { Text } from '@react-native-material/core';
+import { Box, Text, Button } from '@react-native-material/core';
 import { StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -10,6 +10,7 @@ export function AssignmentTable(): React.JSX.Element {
   const [currentMatchNum, setCurrentMatchNum] = useState<number>(-1);
 
   const assignment: TAssignment = useAssignment();
+
 
   const scouterName: string = assignment?.currentMatch.scouter ?? '';
   const teamNum: number = assignment?.currentMatch.teamNum ?? 0;
@@ -19,47 +20,49 @@ export function AssignmentTable(): React.JSX.Element {
   useFocusEffect(
     React.useCallback(() => {
       setCurrentMatchNum(assignment.currentMatch.matchNum);
-    }, [assignment.currentMatch])
+    }, [assignment.currentMatch, assignment.currentMatch.matchNum, assignment.currentMatch.scouter])
   );
 
   return (
-    <DataTable style={styles.dataTable}>
-      <DataTable.Row>
-        <DataTable.Title>
-          <Text>Scouter</Text>
-        </DataTable.Title>
-        <DataTable.Cell>
-          <Text>{scouterName}</Text>
-        </DataTable.Cell>
-      </DataTable.Row>
+    <>
+      <DataTable style={styles.dataTable}>
+        <DataTable.Row>
+          <DataTable.Title>
+            <Text>Scouter</Text>
+          </DataTable.Title>
+          <DataTable.Cell>
+            <Text>{scouterName}</Text>
+          </DataTable.Cell>
+        </DataTable.Row>
 
-      <DataTable.Row>
-        <DataTable.Title>
-          <Text>Team #</Text>
-        </DataTable.Title>
-        <DataTable.Cell>
-          <Text>{teamNum}</Text>
-        </DataTable.Cell>
-      </DataTable.Row>
+        <DataTable.Row>
+          <DataTable.Title>
+            <Text>Team #</Text>
+          </DataTable.Title>
+          <DataTable.Cell>
+            <Text>{teamNum}</Text>
+          </DataTable.Cell>
+        </DataTable.Row>
 
-      <DataTable.Row>
-        <DataTable.Title>
-          <Text>Match #</Text>
-        </DataTable.Title>
-        <DataTable.Cell>
-          <Text>{matchNum}</Text>
-        </DataTable.Cell>
-      </DataTable.Row>
+        <DataTable.Row>
+          <DataTable.Title>
+            <Text>Match #</Text>
+          </DataTable.Title>
+          <DataTable.Cell>
+            <Text>{matchNum}</Text>
+          </DataTable.Cell>
+        </DataTable.Row>
 
-      <DataTable.Row>
-        <DataTable.Title>
-          <Text>Alliance Pos</Text>
-        </DataTable.Title>
-        <DataTable.Cell>
-          <Text>{alliance}</Text>
-        </DataTable.Cell>
-      </DataTable.Row>
-    </DataTable>
+        <DataTable.Row>
+          <DataTable.Title>
+            <Text>Alliance Pos</Text>
+          </DataTable.Title>
+          <DataTable.Cell>
+            <Text>{alliance}</Text>
+          </DataTable.Cell>
+        </DataTable.Row>
+      </DataTable>
+    </>
   );
 }
 
