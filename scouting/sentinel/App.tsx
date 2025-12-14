@@ -13,7 +13,7 @@ import { MatchLogs } from './src/components/screens/MatchLogs';
 import { StatusBar } from 'expo-status-bar';
 import { LogProvider } from './src/contexts/LogContext';
 import { TimerProvider } from './src/contexts/TimerContext';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { EditAssignment } from './src/components/screens/EditAssignment';
 
 const NavStack = createNativeStackNavigator<TRootStackParamList>();
 
@@ -64,6 +64,11 @@ function App() {
                     name="QRShow"
                     component={QRShow}
                     options={{ headerShown: false }}
+                  />
+                  <NavStack.Screen
+                    name="EditAssignment"
+                    component={EditAssignment}
+                    options={{ headerShown: false}}
                   />
                 </NavStack.Navigator>
               </NavigationContainer>

@@ -1,11 +1,10 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { TAssignment } from '../../../../common/types';
 import { useAssignment } from '../../contexts/AssignmentContext';
 import { DataTable } from 'react-native-paper';
 import { Box, Text, Button } from '@react-native-material/core';
 import { StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 
 export function AssignmentTable(): React.JSX.Element {
   const [currentMatchNum, setCurrentMatchNum] = useState<number>(-1);
@@ -21,7 +20,7 @@ export function AssignmentTable(): React.JSX.Element {
   useFocusEffect(
     React.useCallback(() => {
       setCurrentMatchNum(assignment.currentMatch.matchNum);
-    }, [assignment.currentMatch])
+    }, [assignment.currentMatch, assignment.currentMatch.matchNum, assignment.currentMatch.scouter])
   );
 
   return (

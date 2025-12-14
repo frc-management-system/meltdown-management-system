@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Text, Button, Pressable, HStack } from '@react-native-material/core';
+import { Box, Text, Button, Pressable, HStack, Spacer } from '@react-native-material/core';
 import { Image, StyleSheet } from 'react-native';
 import { RadioButtonList } from '../basics/RadioButtonList';
 import { ERobotState, TRootStackParamList } from '../../../types';
@@ -20,6 +20,10 @@ export function Prematch({ navigation }: PPrematchScreen): React.JSX.Element {
   const [preload, setPreload] = useState(ERobotState.empty);
   const log = useLog();
   const assignment = useAssignment();
+
+  const onEdit = () => {
+    navigation.navigate('EditAssignment');
+  }
 
   const onConfirm = () => {
     let startPos: EStartLocation2025 = EStartLocation2025.center;
@@ -43,15 +47,18 @@ export function Prematch({ navigation }: PPrematchScreen): React.JSX.Element {
       <Text variant="h4">Pre-Match</Text>
       <HStack spacing={2}>
         <AssignmentTable />
-        <Box style={styles.form}>
-          <Text variant="h6">Pre-Load:</Text>
-          <RadioButtonList
-            direction="row"
-            labels={[ERobotState.coral, ERobotState.empty]}
-            selected={preload}
-            setSelected={(value: ERobotState) => setPreload(value)}
-          />
-          <Text variant="h5">Press start location:</Text>
+        <Box>
+          <Button title="Edit Assignment" onPress={onEdit}/>
+          <Box style={styles.form}>
+            <Text variant="h6">Pre-Load:</Text>
+            <RadioButtonList
+              direction="row"
+              labels={[ERobotState.coral, ERobotState.empty]}
+              selected={preload}
+              setSelected={(value: ERobotState) => setPreload(value)}
+            />
+            <Text variant="h5">Press start location:</Text>
+          </Box>
         </Box>
       </HStack>
       <Image
@@ -99,8 +106,8 @@ const styles = StyleSheet.create({
     width: 1000,
   },
   form: {
-    marginLeft: 150,
-    marginTop: 120,
+    marginLeft: 50,
+    marginTop: 80,
   },
   left: {
     height: 225,
