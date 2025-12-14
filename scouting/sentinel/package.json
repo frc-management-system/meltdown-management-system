@@ -1,6 +1,6 @@
 {
   "name": "scouting-sentinel",
-  "version": "2025.1.2",
+  "version": "2026.0.1",
   "main": "./index.js",
   "scripts": {
     "start": "npx expo start --dev-client",

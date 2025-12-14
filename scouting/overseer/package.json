@@ -1,7 +1,7 @@
 {
   "name": "scouting-overseer",
   "private": true,
-  "version": "2025.1.2",
+  "version": "2026.0.1",
   "main": "./dist/main/main.js",
   "scripts": {
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",

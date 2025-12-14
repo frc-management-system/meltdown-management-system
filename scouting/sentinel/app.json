@@ -2,7 +2,7 @@
   "expo": {
     "name": "scouting-sentinel",
     "slug": "scouting-sentinel",
-    "version": "2025.1.2",
+    "version": "2026.0.1",
     "orientation": "landscape",
     "icon": "./assets/logo.png",
     "userInterfaceStyle": "light",
