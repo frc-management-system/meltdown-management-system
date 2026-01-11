@@ -1,18 +1,17 @@
 import React, { createContext, MutableRefObject, useContext, useRef } from 'react';
 import { EEventTypes, TLog } from '../../../common/types';
 import {
-  EEndgameLocation2025,
   EPickupLocation2025,
   EScoreLocation2025,
   EStartLocation2025,
-  TEvent2025,
 } from '../../../common/types/2025';
 import { useTimer } from './TimerContext';
 import { useAssignment } from './AssignmentContext';
 import { ERobotState, TLogActions } from '../../types';
 import { useFileManager } from '../hooks/useFileManager';
+import { EEndgameLocation2026, TEvent2026 } from '../../../common/types/2026';
 
-const logDefault: TLog<TEvent2025> = {
+const logDefault: TLog<TEvent2026> = {
   teamNum: 0,
   matchNum: 0,
   scouter: '',
@@ -21,20 +20,20 @@ const logDefault: TLog<TEvent2025> = {
   events: [],
 };
 
-const LogContext: React.Context<MutableRefObject<TLog<TEvent2025>>> =
-  createContext<MutableRefObject<TLog<TEvent2025>>>(null);
+const LogContext: React.Context<MutableRefObject<TLog<TEvent2026>>> =
+  createContext<MutableRefObject<TLog<TEvent2026>>>(null);
 
 export const useSaveLog: () => () => Promise<string> = (): (() => Promise<string>) => {
-  const log = useContext<MutableRefObject<TLog<TEvent2025>>>(LogContext);
+  const log = useContext<MutableRefObject<TLog<TEvent2026>>>(LogContext);
   const fileManager = useFileManager();
 
   return async () => {
-    return fileManager.saveLog<TEvent2025>(log.current);
+    return fileManager.saveLog<TEvent2026>(log.current);
   };
 };
 
 export const useLog: () => TLogActions = (): TLogActions => {
-  const log = useContext<MutableRefObject<TLog<TEvent2025>>>(LogContext);
+  const log = useContext<MutableRefObject<TLog<TEvent2026>>>(LogContext);
   const assignment = useAssignment();
   const timer = useTimer();
 
@@ -94,17 +93,11 @@ export const useLog: () => TLogActions = (): TLogActions => {
         timestamp: timer.getTimeSeconds(),
       });
     },
-    addEndgameEvent: (
-      location: EEndgameLocation2025,
-      notes: string,
-      clearAlgae: number,
-      defenseRating: number
-    ) => {
+    addEndgameEvent: (location: EEndgameLocation2026, notes: string, defenseRating: number) => {
       log.current.events.push({
         type: EEventTypes.endgame,
         location,
         notes,
-        clearAlgae,
         defenseRating,
         timestamp: timer.getTimeSeconds(),
       });
@@ -114,7 +107,7 @@ export const useLog: () => TLogActions = (): TLogActions => {
 };
 
 export function LogProvider({ children }: React.PropsWithChildren) {
-  const log = useRef<TLog<TEvent2025>>(logDefault);
+  const log = useRef<TLog<TEvent2026>>(logDefault);
 
   return <LogContext.Provider value={log}>{children}</LogContext.Provider>;
 }

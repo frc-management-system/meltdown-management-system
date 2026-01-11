@@ -3,7 +3,7 @@ import { VStack, TextInput, HStack, Text, Button, Box, Divider } from '@react-na
 import { StyleSheet, Dimensions } from 'react-native';
 import { RadioButtonList } from '../basics/RadioButtonList';
 import { EAssignmentActionType, TRootStackParamList } from '../../../types';
-import { EEndgameLocation2025 } from '../../../../common/types/2025';
+import { EEndgameLocation2026 } from '../../../../common/types/2026';
 import { useLog, useSaveLog } from '../../contexts/LogContext';
 import { useAssignmentDispatch } from '../../contexts/AssignmentContext';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -12,14 +12,9 @@ const windowDimensions = Dimensions.get('window');
 
 export type PEndgameScreenProps = NativeStackScreenProps<TRootStackParamList, 'Endgame'>;
 
-export function Endgame({
-  route: {
-    params: { clearAlgae },
-  },
-  navigation,
-}: PEndgameScreenProps): React.JSX.Element {
-  const [endgameLocation, setEndgameLocation] = useState<EEndgameLocation2025>(
-    EEndgameLocation2025.none
+export function Endgame({ navigation }: PEndgameScreenProps): React.JSX.Element {
+  const [endgameLocation, setEndgameLocation] = useState<EEndgameLocation2026>(
+    EEndgameLocation2026.none
   );
   const [defenseRating, setDefenseRating] = useState<string>('0');
 
@@ -31,7 +26,7 @@ export function Endgame({
   const assignmentDispatch = useAssignmentDispatch();
 
   const onSubmit = () => {
-    log.addEndgameEvent(endgameLocation, `\"${notes}\"`, clearAlgae, +defenseRating);
+    log.addEndgameEvent(endgameLocation, `\"${notes}\"`, +defenseRating);
 
     assignmentDispatch({
       type: EAssignmentActionType.nextMatch,
@@ -46,12 +41,12 @@ export function Endgame({
     <Box style={styles.autoContainer}>
       <Text variant="h4">Endgame</Text>
       <VStack>
-        <Text variant="h6">Barge:</Text>
+        <Text variant="h6">Tower:</Text>
         <RadioButtonList
-          labels={Object.values(EEndgameLocation2025)}
+          labels={Object.values(EEndgameLocation2026)}
           direction="row"
           selected={endgameLocation}
-          setSelected={(value: EEndgameLocation2025) => {
+          setSelected={(value: EEndgameLocation2026) => {
             setEndgameLocation(value);
           }}
         />

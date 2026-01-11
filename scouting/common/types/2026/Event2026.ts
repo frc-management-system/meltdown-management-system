@@ -9,11 +9,10 @@ class ClassEvent2026 {
   type?: EEventTypes = EEventTypes.start;
   timestamp?: number = 0;
   location?: EStartLocation2026 | EPickupLocation2026 | EScoreLocation2026 | EEndgameLocation2026;
-  gamepiece?: ERobotState = ERobotState.empty;
-  miss?: boolean = false;
-  leave?: boolean = false;
+  fuel?: number = 0;
+  miss?: number = 0;
+  autoClimb?: boolean = false;
   notes?: string = '';
-  clearAlgae?: number = 0;
   defenseRating?: number = 0;
 }
 

@@ -2,8 +2,8 @@ import {
   EStartLocation2025,
   EPickupLocation2025,
   EScoreLocation2025,
-  EEndgameLocation2025,
 } from '../../common/types/2025';
+import { EEndgameLocation2026 } from '../../common/types/2026';
 import { ERobotState } from './ERobotState';
 
 export type TLogActions = {
@@ -14,10 +14,5 @@ export type TLogActions = {
   addScoreEvent: (location: EScoreLocation2025) => void;
   miss: () => void;
   addAutoEvent: (leave: boolean) => void;
-  addEndgameEvent: (
-    location: EEndgameLocation2025,
-    notes: string,
-    clearAlgae: number,
-    defenseRating: number
-  ) => void;
+  addEndgameEvent: (location: EEndgameLocation2026, notes: string, defenseRating: number) => void;
 };
