@@ -1,6 +1,8 @@
 import { EEventTypes } from '..';
 import { ERobotState } from '../../../sentinel/types';
+import { EEndgameLevel2026 } from './EEndgameLevel2026';
 import { EEndgameLocation2026 } from './EEndgameLocation2026';
+import { EPassingRating2026 } from './EPassingRating2026';
 import { EPickupLocation2026 } from './EPickupLocation2026';
 import { EScoreLocation2026 } from './EScoreLocation2026';
 import { EStartLocation2026 } from './EStartLocation2026';
@@ -9,8 +11,12 @@ class ClassEvent2026 {
   type?: EEventTypes = EEventTypes.start;
   timestamp?: number = 0;
   location?: EStartLocation2026 | EPickupLocation2026 | EScoreLocation2026 | EEndgameLocation2026;
-  fuel?: number = 0;
-  miss?: number = 0;
+  endGameLevel?: EEndgameLevel2026;
+  scoringRating?: EScoreLocation2026;
+  passingRating?: EPassingRating2026;
+  duration?: number;
+  preloadFuel?: number = 0;
+  accuracy?: number = 0;
   autoClimb?: boolean = false;
   notes?: string = '';
   defenseRating?: number = 0;

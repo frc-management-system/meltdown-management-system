@@ -1,6 +1,9 @@
 export enum EEndgameLocation2026 {
   none = 'none',
-  level1 = 'level 1',
-  level2 = 'level 2',
-  level3 = 'level 3',
+  leftPeg = 'leftPeg',
+  leftSide = 'leftSide',
+  rightPeg = 'rightPeg',
+  rightSide = 'rightSide',
+  frontCenter = 'frontCenter',
+  backCenter = 'backCenter',
 }
