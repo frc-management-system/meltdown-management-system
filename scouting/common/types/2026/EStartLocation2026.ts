@@ -1,5 +1,5 @@
 export enum EStartLocation2026 {
-  trench = 'leftTrench',
+  leftTrench = 'leftTrench',
   leftBump = 'leftBump',
   hub = 'hub',
   rightBump = 'rightBump',

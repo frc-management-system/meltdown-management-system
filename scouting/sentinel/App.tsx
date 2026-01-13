@@ -20,61 +20,57 @@ const NavStack = createNativeStackNavigator<TRootStackParamList>();
 function App() {
   return (
     <>
-        <TimerProvider>
-          <StatusBar hidden={true} />
-          <AssignmentProvider>
-            <LogProvider>
-              <NavigationContainer>
-                <NavStack.Navigator
-                  initialRouteName="Startup"
-                  screenOptions={{ headerShown: false }}
-                >
-                  <NavStack.Screen
-                    name="Startup"
-                    component={Startup}
-                    options={{ headerShown: false }}
-                  />
-                  <NavStack.Screen
-                    name="MatchLogs"
-                    component={MatchLogs}
-                    options={{ headerShown: false }}
-                  />
-                  <NavStack.Screen
-                    name="QRCapture"
-                    component={QRCapture}
-                    options={{ headerShown: false }}
-                  />
-                  <NavStack.Screen
-                    name="Prematch"
-                    component={Prematch}
-                    options={{ headerShown: false }}
-                  />
-                  <NavStack.Screen
-                    name="Teleop"
-                    component={Teleop}
-                    options={{ headerShown: false }}
-                    initialParams={{ initialRobotState: ERobotState.empty }}
-                  />
-                  <NavStack.Screen
-                    name="Endgame"
-                    component={Endgame}
-                    options={{ headerShown: false }}
-                  />
-                  <NavStack.Screen
-                    name="QRShow"
-                    component={QRShow}
-                    options={{ headerShown: false }}
-                  />
-                  <NavStack.Screen
-                    name="EditAssignment"
-                    component={EditAssignment}
-                    options={{ headerShown: false}}
-                  />
-                </NavStack.Navigator>
-              </NavigationContainer>
-            </LogProvider>
-          </AssignmentProvider>
-        </TimerProvider>
+      <TimerProvider>
+        <StatusBar hidden={true} />
+        <AssignmentProvider>
+          <LogProvider>
+            <NavigationContainer>
+              <NavStack.Navigator initialRouteName="Startup" screenOptions={{ headerShown: false }}>
+                <NavStack.Screen
+                  name="Startup"
+                  component={Startup}
+                  options={{ headerShown: false }}
+                />
+                <NavStack.Screen
+                  name="MatchLogs"
+                  component={MatchLogs}
+                  options={{ headerShown: false }}
+                />
+                <NavStack.Screen
+                  name="QRCapture"
+                  component={QRCapture}
+                  options={{ headerShown: false }}
+                />
+                <NavStack.Screen
+                  name="Prematch"
+                  component={Prematch}
+                  options={{ headerShown: false }}
+                />
+                <NavStack.Screen
+                  name="Teleop"
+                  component={Teleop}
+                  options={{ headerShown: false }}
+                />
+                <NavStack.Screen
+                  name="Endgame"
+                  component={Endgame}
+                  options={{ headerShown: false }}
+                />
+                <NavStack.Screen
+                  name="QRShow"
+                  component={QRShow}
+                  options={{ headerShown: false }}
+                />
+                <NavStack.Screen
+                  name="EditAssignment"
+                  component={EditAssignment}
+                  options={{ headerShown: false }}
+                />
+              </NavStack.Navigator>
+            </NavigationContainer>
+          </LogProvider>
+        </AssignmentProvider>
+      </TimerProvider>
     </>
   );
 }
