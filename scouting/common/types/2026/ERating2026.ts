@@ -1,4 +1,4 @@
-export enum EScoringRating2026 {
+export enum ERating2026 {
   fast = 'fast',
   semiFast = 'semi-fast',
   average = 'average',

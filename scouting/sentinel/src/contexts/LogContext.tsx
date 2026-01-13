@@ -1,15 +1,17 @@
 import React, { createContext, MutableRefObject, useContext, useRef } from 'react';
 import { EEventTypes, TLog } from '../../../common/types';
-import {
-  EPickupLocation2025,
-  EScoreLocation2025,
-  EStartLocation2025,
-} from '../../../common/types/2025';
 import { useTimer } from './TimerContext';
 import { useAssignment } from './AssignmentContext';
-import { ERobotState, TLogActions } from '../../types';
+import { TLogActions } from '../../types';
 import { useFileManager } from '../hooks/useFileManager';
-import { EEndgameLocation2026, TEvent2026 } from '../../../common/types/2026';
+import {
+  EEndgameLocation2026,
+  EScoreLocation2026,
+  ERating2026,
+  EStartLocation2026,
+  ETowerLevel2026,
+  TEvent2026,
+} from '../../../common/types/2026';
 
 const logDefault: TLog<TEvent2026> = {
   teamNum: 0,
@@ -38,7 +40,7 @@ export const useLog: () => TLogActions = (): TLogActions => {
   const timer = useTimer();
 
   return {
-    addStartEvent: (location: EStartLocation2025) => {
+    addStartEvent: (location: EStartLocation2026, preloadFuel: number) => {
       log.current = {
         teamNum: assignment.currentMatch.teamNum,
         matchNum: assignment.currentMatch.matchNum,
@@ -49,6 +51,7 @@ export const useLog: () => TLogActions = (): TLogActions => {
           {
             type: EEventTypes.start,
             location,
+            preloadFuel,
             timestamp: 0,
           },
         ],
@@ -56,49 +59,49 @@ export const useLog: () => TLogActions = (): TLogActions => {
 
       timer.start();
     },
-    addPickupEvent: (location: EPickupLocation2025, gamepiece: ERobotState) => {
-      log.current.events.push({
-        type: EEventTypes.pickup,
-        location,
-        gamepiece,
-        timestamp: timer.getTimeSeconds(),
-      });
-    },
-    modifyLastPickupEvent: (location: EPickupLocation2025) => {
-      const idx = log.current.events.findLastIndex((event) => event.type === EEventTypes.pickup);
-      if (idx !== -1) log.current.events[idx] = { ...log.current.events[idx], location };
-    },
-    addDropEvent: (gamepiece: ERobotState) => {
-      log.current.events.push({
-        type: EEventTypes.drop,
-        gamepiece,
-        timestamp: timer.getTimeSeconds(),
-      });
-    },
-    addScoreEvent: (location: EScoreLocation2025) => {
+    addScoreEvent: (
+      location: EScoreLocation2026,
+      rating: ERating2026,
+      accuracy: number,
+      duration: number
+    ) => {
       log.current.events.push({
         type: EEventTypes.score,
         location,
+        rating,
+        accuracy,
+        duration,
         timestamp: timer.getTimeSeconds(),
       });
     },
-    miss: () => {
-      const idx = log.current.events.findLastIndex((event) => event.type === EEventTypes.score);
-      if (idx !== -1) log.current.events[idx].miss = true;
+    addPassingEvent: (rating: ERating2026, accuracy: number, duration: number) => {
+      log.current.events.push({
+        type: EEventTypes.pass,
+        rating: rating,
+        accuracy,
+        duration,
+        timestamp: timer.getTimeSeconds(),
+      });
     },
-    addAutoEvent: (leave: boolean) => {
+    addAutoEvent: (autoClimb: boolean) => {
       log.current.events.push({
         type: EEventTypes.auto,
-        leave,
+        autoClimb,
         timestamp: timer.getTimeSeconds(),
       });
     },
-    addEndgameEvent: (location: EEndgameLocation2026, notes: string, defenseRating: number) => {
+    addEndgameEvent: (
+      location: EEndgameLocation2026,
+      notes: string,
+      defenseRating: number,
+      towerLevel: ETowerLevel2026
+    ) => {
       log.current.events.push({
         type: EEventTypes.endgame,
         location,
         notes,
         defenseRating,
+        towerLevel,
         timestamp: timer.getTimeSeconds(),
       });
       console.log(log.current);

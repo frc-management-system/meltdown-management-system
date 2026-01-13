@@ -5,4 +5,5 @@ export enum EEventTypes {
   score = 'score',
   auto = 'auto',
   endgame = 'endgame',
+  pass = 'pass',
 }
