@@ -50,7 +50,7 @@ export function Prematch({ navigation }: PPrematchScreen): React.JSX.Element {
         <Box>
           <Button title="Edit Assignment" onPress={onEdit} />
           <Box style={styles.form}>
-            <Text variant="h6">Pre-Load:</Text>
+            <Text variant="h6">Fuel Pre-Load:</Text>
             <RadioButtonList
               direction="row"
               labels={['0', '1', '2', '3', '4', '5', '6', '7', '8']}
@@ -74,7 +74,7 @@ export function Prematch({ navigation }: PPrematchScreen): React.JSX.Element {
             // eslint-disable-next-line react-native/no-color-literals, react-native/no-inline-styles
             style={{
               ...style,
-              backgroundColor: startPosPressed[i] ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0)',
+              backgroundColor: startPosPressed[i] ? 'rgba(0,200,0,0.5)' : 'rgba(0,0,0,0)',
             }}
             onPress={() => {
               const newArr = new Array(3).fill(false);
@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: autoAreaTop,
     width: 1000,
+    objectFit: 'fill',
   },
   confirm: {
     position: 'absolute',
@@ -107,42 +108,42 @@ const styles = StyleSheet.create({
   },
   form: {
     marginLeft: 50,
-    marginTop: 80,
+    marginTop: 30,
   },
   leftTrench: {
     height: 225,
     left: autoAreaLeft,
     position: 'absolute',
     top: autoAreaTop,
-    width: 333,
+    width: 200,
   },
   leftBump: {
     height: 225,
-    left: autoAreaLeft,
+    left: autoAreaLeft + 200,
     position: 'absolute',
     top: autoAreaTop,
-    width: 333,
+    width: 200,
   },
   hub: {
     height: 225,
-    left: autoAreaLeft + 333,
+    left: autoAreaLeft + 400,
     position: 'absolute',
     top: autoAreaTop,
-    width: 333,
+    width: 200,
   },
   rightBump: {
     height: 225,
-    left: autoAreaLeft + 666,
+    left: autoAreaLeft + 600,
     position: 'absolute',
     top: autoAreaTop,
-    width: 333,
+    width: 200,
   },
   rightTrench: {
     height: 225,
-    left: autoAreaLeft + 666,
+    left: autoAreaLeft + 800,
     position: 'absolute',
     top: autoAreaTop,
-    width: 333,
+    width: 200,
   },
 });
 const posStyles = [

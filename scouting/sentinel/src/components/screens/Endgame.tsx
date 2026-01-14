@@ -62,57 +62,70 @@ export function Endgame({ navigation }: PEndgameScreenProps): React.JSX.Element 
   return (
     <Box style={styles.autoContainer}>
       <Text variant="h4">Endgame</Text>
-      <VStack>
-        <Text variant="h6">Tower:</Text>
-        <RadioButtonList
-          labels={Object.values(ETowerLevel2026)}
-          direction="row"
-          selected={towerLevel}
-          setSelected={(value: ETowerLevel2026) => {
-            setTowerLevel(value);
-          }}
-        />
-        <Image alt="Ending Position" source={towerImage} style={styles.endField} />
+      <HStack spacing={2}>
+        <VStack>
+          <Text variant="h6">Tower:</Text>
+          <RadioButtonList
+            labels={Object.values(ETowerLevel2026)}
+            direction="row"
+            selected={towerLevel}
+            setSelected={(value: ETowerLevel2026) => {
+              setTowerLevel(value);
+            }}
+          />
+          <Divider />
+          <Text variant="h6">Defense Rating:</Text>
+          <RadioButtonList
+            labels={Array.from({ length: 6 }, (_, i) => `${i}`)}
+            direction="row"
+            selected={defenseRating}
+            setSelected={(value: string) => {
+              setDefenseRating(value);
+            }}
+            maxPerRow={3}
+          />
+          <Divider />
+          <TextInput
+            label="Notes"
+            variant="outlined"
+            multiline={true}
+            numberOfLines={20}
+            textAlignVertical={'top'}
+            style={styles.textInput}
+            onChangeText={setNotes}
+            value={notes}
+          />
+        </VStack>
+        {towerLevel === ETowerLevel2026.none ? (
+          <></>
+        ) : (
+          <Box>
+            <Text variant="h6" style={{ marginTop: 10 }}>
+              Tower Position:
+            </Text>
+            <Image alt="Ending Position" source={towerImage} style={styles.endField} />
 
-        {posStyles.map((style, i) => {
-          return (
-            <Pressable
-              key={i}
-              // eslint-disable-next-line react-native/no-color-literals, react-native/no-inline-styles
-              style={{
-                ...style,
-                backgroundColor: endPosPressed[i] ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0)',
-              }}
-              onPress={() => {
-                const newArr = new Array(3).fill(false);
-                newArr[i] = true;
-                setEndPosPressed(newArr);
-              }}
-            />
-          );
-        })}
-        <Divider />
-        <Text variant="h6">Defense Rating:</Text>
-        <RadioButtonList
-          labels={Array.from({ length: 6 }, (_, i) => `${i}`)}
-          direction="row"
-          selected={defenseRating}
-          setSelected={(value: string) => {
-            setDefenseRating(value);
-          }}
-        />
-        <Divider />
-        <TextInput
-          label="Notes"
-          variant="outlined"
-          multiline={true}
-          numberOfLines={20}
-          textAlignVertical={'top'}
-          style={styles.textInput}
-          onChangeText={setNotes}
-          value={notes}
-        />
-      </VStack>
+            {posStyles.map((style, i) => {
+              return (
+                <Pressable
+                  key={i}
+                  // eslint-disable-next-line react-native/no-color-literals, react-native/no-inline-styles
+                  style={{
+                    ...style,
+                    backgroundColor: endPosPressed[i] ? 'rgba(0,200,0,0.5)' : 'rgba(0,0,0,0)',
+                  }}
+                  onPress={() => {
+                    const newArr = new Array(3).fill(false);
+                    newArr[i] = true;
+                    setEndPosPressed(newArr);
+                  }}
+                />
+              );
+            })}
+          </Box>
+        )}
+      </HStack>
+
       <HStack>
         <Button
           title="Submit"
@@ -127,23 +140,23 @@ export function Endgame({ navigation }: PEndgameScreenProps): React.JSX.Element 
 }
 
 const endAreaLeft = 12;
-const endAreaTop = 280;
+const endAreaTop = 50;
 const styles = StyleSheet.create({
   endField: {
-    height: 225,
+    height: 350,
     left: endAreaLeft,
     position: 'absolute',
     top: endAreaTop,
-    width: 1000,
+    width: 500,
+    objectFit: 'fill',
   },
   autoContainer: {
-    alignContent: 'center',
-    alignItems: 'center',
     height: windowDimensions.height,
     width: windowDimensions.width,
   },
   button: {
     margin: 20,
+    marginLeft: 350,
     width: 100,
   },
   textInput: {
@@ -152,53 +165,53 @@ const styles = StyleSheet.create({
     width: 450,
   },
   none: {
-    height: 225,
-    left: endAreaLeft,
+    height: 0,
+    left: 0,
     position: 'absolute',
-    top: endAreaTop,
-    width: 333,
+    top: 0,
+    width: 0,
   },
   leftPeg: {
-    height: 225,
+    height: 350,
     left: endAreaLeft,
     position: 'absolute',
     top: endAreaTop,
-    width: 333,
+    width: 90,
   },
   leftSide: {
     height: 225,
-    left: endAreaLeft,
+    left: endAreaLeft + 90,
     position: 'absolute',
-    top: endAreaTop,
-    width: 333,
+    top: endAreaTop + 125,
+    width: 100,
   },
   frontCenter: {
     height: 225,
-    left: endAreaLeft,
+    left: endAreaLeft + 190,
     position: 'absolute',
-    top: endAreaTop,
-    width: 333,
+    top: endAreaTop + 125,
+    width: 110,
   },
   backCenter: {
-    height: 225,
-    left: endAreaLeft,
+    height: 125,
+    left: endAreaLeft + 90,
     position: 'absolute',
     top: endAreaTop,
-    width: 333,
+    width: 310,
   },
   rightSide: {
     height: 225,
-    left: endAreaLeft,
+    left: endAreaLeft + 300,
     position: 'absolute',
-    top: endAreaTop,
-    width: 333,
+    top: endAreaTop + 125,
+    width: 100,
   },
   rightPeg: {
-    height: 225,
-    left: endAreaLeft,
+    height: 350,
+    left: endAreaLeft + 400,
     position: 'absolute',
     top: endAreaTop,
-    width: 333,
+    width: 100,
   },
 });
 

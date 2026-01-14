@@ -9,7 +9,16 @@ export type PRadioButtonList = {
   position?: 'leading' | 'trailing';
   selected: string;
   setSelected: (value: string) => void;
+  maxPerRow?: number;
 };
+
+function chunkArray(arr: string[], chunkSize: number) {
+  const chunks = [];
+  for (let i = 0; i < arr.length; i += chunkSize) {
+    chunks.push(arr.slice(i, i + chunkSize));
+  }
+  return chunks;
+}
 
 export function RadioButtonList({
   labels,
@@ -17,15 +26,24 @@ export function RadioButtonList({
   position = 'trailing',
   selected,
   setSelected,
+  maxPerRow = 5,
 }: PRadioButtonList): React.JSX.Element {
+  const rows = chunkArray(labels, maxPerRow);
+
   return (
     <RadioButton.Group onValueChange={(newValue) => setSelected(newValue)} value={selected}>
-      <Stack direction={direction}>
-        {labels.map((label, i) => {
+      <Stack direction={direction === 'column' ? 'row' : 'column'}>
+        {rows.map((labels, i) => {
           return (
-            <HStack key={label}>
-              <RadioButton.Item label={label} value={label} position={position} />
-            </HStack>
+            <Stack direction={direction} key={i}>
+              {labels.map((label: string) => {
+                return (
+                  <HStack key={label}>
+                    <RadioButton.Item label={label} value={label} position={position} />
+                  </HStack>
+                );
+              })}
+            </Stack>
           );
         })}
       </Stack>
