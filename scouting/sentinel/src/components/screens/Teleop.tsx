@@ -22,11 +22,22 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
   locations.push(EScoreLocation2026.midfield);
   const [scorePosPressed, setScorePosPressed] = useState(new Array(locations.length).fill(false));
 
+  const [inCycle, setInCycle] = useState<boolean>(false);
+  const [currentRating, setCurrentRating] = useState<ERating2026>();
+
   const assignment: TAssignment = useAssignment();
   const log: TLogActions = useLog();
 
+  const startCycle: (key: keyof typeof ERating2026) => void = (key: keyof typeof ERating2026) => {
+    setInCycle(true);
+  };
+
+  const endCycle: () => void = () => {};
+
   const toEndgame: () => void = (): void => {
     log.addAutoEvent(autoClimb === 'checked');
+
+    setScorePosPressed(new Array(locations.length).fill(false));
 
     navigation.navigate('Endgame');
   };
@@ -50,21 +61,11 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
         <HStack divider={<Divider />} spacing={20} style={{ marginLeft: 20 }}>
           <VStack spacing={5}>
             <Text variant="h6">Scoring:</Text>
-            <ButtonList
-              enumProp={ERating2026}
-              onPress={(key: keyof typeof ERating2026) => {
-                console.log(key);
-              }}
-            />
+            <ButtonList enumProp={ERating2026} onPress={startCycle} />
           </VStack>
           <VStack spacing={5}>
             <Text variant="h6">Passing:</Text>
-            <ButtonList
-              enumProp={ERating2026}
-              onPress={(key: keyof typeof ERating2026) => {
-                console.log(key);
-              }}
-            />
+            <ButtonList enumProp={ERating2026} onPress={startCycle} />
           </VStack>
           <VStack>
             <Text variant="h6">Location:</Text>
