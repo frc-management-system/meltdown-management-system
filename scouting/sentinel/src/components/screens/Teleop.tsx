@@ -4,8 +4,8 @@ import { Image, StyleSheet } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import { EAccuracy, TLogActions, TRootStackParamList } from '../../../types';
 import { TAssignment } from '../../../../common/types';
-import blueFieldImage from '../../../assets/blueField.png';
-import redFieldImage from '../../../assets/redField.png';
+import blueFieldImage from '../../../assets/labeledBlueField.png';
+import redFieldImage from '../../../assets/labeledRedField.png';
 import { useAssignment } from '../../contexts/AssignmentContext';
 import { ViewTimer } from '../basics/ViewTimer';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -223,7 +223,7 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
 }
 
 const FieldAreaLeft = 351;
-const FieldAreaTop = 47;
+const FieldAreaTop = 30;
 const styles = StyleSheet.create({
   button: {
     width: 120,
@@ -236,111 +236,110 @@ const styles = StyleSheet.create({
     margin: 4,
   },
   field: {
-    height: 495,
+    height: 450,
     left: 400,
     position: 'absolute',
-    top: 0,
+    top: 30,
     width: 400,
-    transform: [{ rotate: '90deg' }],
     objectFit: 'fill',
   },
   images: {
     marginTop: 10,
   },
   redLeftTrench: {
-    height: 100,
+    height: 110,
     left: FieldAreaLeft + 270,
     position: 'absolute',
     top: FieldAreaTop,
-    width: 225,
+    width: 180,
     backgroundColor: 'rgba(255, 0, 0, 0.5)',
   },
   redHub: {
-    height: 200,
+    height: 230,
     left: FieldAreaLeft + 270,
     position: 'absolute',
-    top: FieldAreaTop + 100,
-    width: 225,
+    top: FieldAreaTop + 110,
+    width: 180,
     backgroundColor: 'rgba(0, 255, 0, 0.5)',
   },
   redMidfield: {
-    height: 300,
-    left: FieldAreaLeft,
+    height: 350,
+    left: FieldAreaLeft + 50,
     position: 'absolute',
     top: FieldAreaTop,
-    width: 270,
+    width: 220,
     backgroundColor: 'rgba(0, 0, 255, 0.5)',
   },
   redOutpost: {
     height: 100,
-    left: FieldAreaLeft,
+    left: FieldAreaLeft + 50,
     position: 'absolute',
-    top: FieldAreaTop + 300,
-    width: 150,
+    top: FieldAreaTop + 350,
+    width: 130,
     backgroundColor: 'rgba(150, 0, 50, 0.5)',
   },
   redRightTrench: {
-    height: 100,
+    height: 110,
     left: FieldAreaLeft + 270,
     position: 'absolute',
-    top: FieldAreaTop + 300,
-    width: 225,
+    top: FieldAreaTop + 340,
+    width: 180,
     backgroundColor: 'rgba(200, 100, 0, 0.5)',
   },
   redMidField2: {
     height: 100,
-    left: FieldAreaLeft + 150,
+    left: FieldAreaLeft + 180,
     position: 'absolute',
-    top: FieldAreaTop + 300,
-    width: 120,
+    top: FieldAreaTop + 350,
+    width: 90,
     backgroundColor: 'rgba(0, 0, 255, 0.5)',
   },
   blueLeftTrench: {
-    height: 100,
-    left: FieldAreaLeft,
+    height: 110,
+    left: FieldAreaLeft + 50,
     position: 'absolute',
-    top: FieldAreaTop + 300,
-    width: 225,
+    top: FieldAreaTop + 340,
+    width: 180,
     backgroundColor: 'rgba(255, 0, 0, 0.5)',
   },
   blueHub: {
-    height: 200,
-    left: FieldAreaLeft,
+    height: 230,
+    left: FieldAreaLeft + 50,
     position: 'absolute',
-    top: FieldAreaTop + 100,
-    width: 225,
+    top: FieldAreaTop + 110,
+    width: 180,
     backgroundColor: 'rgba(0, 255, 0, 0.5)',
   },
   blueMidfield: {
-    height: 300,
-    left: FieldAreaLeft + 225,
+    height: 350,
+    left: FieldAreaLeft + 230,
     position: 'absolute',
     top: FieldAreaTop + 100,
-    width: 270,
+    width: 220,
     backgroundColor: 'rgba(0, 0, 255, 0.5)',
   },
   blueOutpost: {
     height: 100,
-    left: FieldAreaLeft + 345,
+    left: FieldAreaLeft + 320,
     position: 'absolute',
     top: FieldAreaTop,
-    width: 150,
+    width: 130,
     backgroundColor: 'rgba(150, 0, 50, 0.5)',
   },
   blueRightTrench: {
-    height: 100,
-    left: FieldAreaLeft,
+    height: 110,
+    left: FieldAreaLeft + 50,
     position: 'absolute',
     top: FieldAreaTop,
-    width: 225,
+    width: 180,
     backgroundColor: 'rgba(200, 100, 0, 0.5)',
   },
   blueMidField2: {
     height: 100,
-    left: FieldAreaLeft + 225,
+    left: FieldAreaLeft + 230,
     position: 'absolute',
     top: FieldAreaTop,
-    width: 120,
+    width: 90,
     backgroundColor: 'rgba(0, 0, 255, 0.5)',
   },
 });
