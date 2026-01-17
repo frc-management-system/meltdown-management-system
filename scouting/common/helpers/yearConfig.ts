@@ -6,17 +6,14 @@ import { denseToEventKey2026, eventKeyToDense2026, eventKeys2026 } from '../type
 export const yearConfig: (version: string) => TYearConfig = (version: string): TYearConfig => {
   const year = version.substring(0, 4);
 
-  console.log(year);
   switch (year) {
     case '2026':
-      console.log('returning 2026');
       return {
         denseToEventKey: denseToEventKey2026,
         eventKeyToDense: eventKeyToDense2026,
         eventKeys: eventKeys2026,
       };
     case '2025':
-      console.log('returning 2025');
       return {
         denseToEventKey: denseToEventKey2025,
         eventKeyToDense: eventKeyToDense2025,
