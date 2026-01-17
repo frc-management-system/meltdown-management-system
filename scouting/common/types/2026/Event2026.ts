@@ -4,15 +4,16 @@ import { EEndgameLocation2026 } from './EEndgameLocation2026';
 import { EPickupLocation2026 } from './EPickupLocation2026';
 import { EScoreLocation2026 } from './EScoreLocation2026';
 import { EStartLocation2026 } from './EStartLocation2026';
-import { ERating2026 as ERating2026 } from '.';
+import { ERating2026 } from './ERating2026';
 
 class ClassEvent2026 {
   type?: EEventTypes = EEventTypes.start;
   timestamp?: number = 0;
-  location?: EStartLocation2026 | EPickupLocation2026 | EScoreLocation2026 | EEndgameLocation2026;
-  towerLevel?: ETowerLevel2026;
-  rating?: ERating2026;
-  duration?: number;
+  location?: EStartLocation2026 | EPickupLocation2026 | EScoreLocation2026 | EEndgameLocation2026 =
+    EStartLocation2026.hub;
+  towerLevel?: ETowerLevel2026 = ETowerLevel2026.none;
+  rating?: ERating2026 = ERating2026.average;
+  duration?: number = 0;
   preloadFuel?: number = 0;
   accuracy?: number = 0;
   autoClimb?: boolean = false;
@@ -25,6 +26,7 @@ export interface TEvent2026 extends ClassEvent2026 {}
 export type TEventArray2026 = Array<keyof TEvent2026>;
 
 export const eventKeys2026: TEventArray2026 = Object.keys(new ClassEvent2026()) as TEventArray2026;
+console.log(eventKeys2026);
 
 export let eventKeyToDense2026: Partial<Record<keyof TEvent2026, string>> = {};
 eventKeys2026.forEach((key: keyof TEvent2026, index: number) => {
