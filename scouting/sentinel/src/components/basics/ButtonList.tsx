@@ -7,6 +7,7 @@ export type PButtonList<EnumType extends object> = {
   onPressIn?: () => void | null;
   onPressOut?: () => void | null;
   selectedKey?: keyof EnumType | null; // Added prop for selection state
+  disabled?: boolean;
 };
 
 export function ButtonList<EnumType extends object>({
@@ -15,6 +16,7 @@ export function ButtonList<EnumType extends object>({
   onPressIn,
   onPressOut,
   selectedKey,
+  disabled,
 }: PButtonList<EnumType>): React.JSX.Element {
   // activeKey handles the momentary "tap" visual feedback
   const [activeKey, setActiveKey] = useState<string | null>(null);
@@ -28,6 +30,7 @@ export function ButtonList<EnumType extends object>({
 
         return (
           <Pressable
+            disabled={disabled}
             key={stringKey}
             onPressIn={() => {
               setActiveKey(stringKey);
@@ -41,20 +44,22 @@ export function ButtonList<EnumType extends object>({
                 onPressOut();
               }
             }}
-            onPress={() => onPress(key)}
+            onPress={() => {
+              onPress(key);
+            }}
             style={{
               padding: 20,
               borderRadius: 12,
               borderWidth: 2,
-              borderColor: '#6200EE',
-              backgroundColor: isFilled ? '#6200EE' : 'transparent',
+              borderColor: disabled ? '#d3d3d3' : '#6200EE',
+              backgroundColor: isFilled ? '#6200EE' : disabled ? '#d3d3d3' : 'transparent',
               alignItems: 'center',
             }}
           >
             <Text
               variant="h6"
               style={{
-                color: isFilled ? '#FFFFFF' : '#6200EE',
+                color: isFilled || disabled ? '#FFFFFF' : '#6200EE',
               }}
             >
               {`${enumProp[key]}`}

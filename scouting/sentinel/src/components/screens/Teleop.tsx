@@ -131,6 +131,7 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
                 cycleDuration.current += timer.getTimeSeconds() - startCycleTime.current;
                 startCycleTime.current = 0;
               }}
+              disabled={isScoring == false && inCycle == true}
             />
           </VStack>
           <VStack spacing={5}>
@@ -147,6 +148,7 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
                 cycleDuration.current += timer.getTimeSeconds() - startCycleTime.current;
                 startCycleTime.current = 0;
               }}
+              disabled={isScoring == true}
             />
           </VStack>
           {inCycle && isScoring ? (
@@ -190,7 +192,7 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
                 // eslint-disable-next-line react-native/no-color-literals, react-native/no-inline-styles
                 style={{
                   ...style,
-                  backgroundColor: scorePosPressed[i] ? 'rgba(0,200,0,0.5)' : 'rgba(0,0,0,0)',
+                  // backgroundColor: scorePosPressed[i] ? 'rgba(0,200,0,0.5)' : 'rgba(0,0,0,0)',
                 }}
                 onPress={() => {
                   const newArr = new Array(locations.length).fill(false);
@@ -292,6 +294,15 @@ const styles = StyleSheet.create({
     top: FieldAreaTop + 300,
     width: 120,
     backgroundColor: 'rgba(0, 0, 255, 0.5)',
+  },
+  interactiveOverlay: {
+    ...StyleSheet.absoluteFillObject, // Sits exactly on top of the field image
+    backgroundColor: 'transparent',
+  },
+  mirroredLayer: {
+    // scaleX: -1 flips across the Y axis (left becomes right)
+    // scaleY: -1 flips across the X axis (bottom becomes top)
+    transform: [{ scaleX: -1 }, { scaleY: -1 }],
   },
 });
 
