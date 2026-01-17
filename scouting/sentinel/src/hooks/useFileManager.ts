@@ -38,6 +38,7 @@ export const useFileManager: () => TFileManager = (): TFileManager => {
     };
 
     const eventKeyToDense = yearConfig(DeviceInfo.getVersion()).eventKeyToDense;
+    console.log(eventKeyToDense);
 
     denseLog.e = log.events.map((event: eventType): Record<string, any> => {
       let denseEvent: Record<string, any> = {};

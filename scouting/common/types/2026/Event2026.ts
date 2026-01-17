@@ -1,7 +1,6 @@
 import { EEventTypes } from '..';
 import { ETowerLevel2026 as ETowerLevel2026 } from './ETowerLevel2026';
 import { EEndgameLocation2026 } from './EEndgameLocation2026';
-import { EPassingRating2026 } from './EPassingRating2026';
 import { EPickupLocation2026 } from './EPickupLocation2026';
 import { EScoreLocation2026 } from './EScoreLocation2026';
 import { EStartLocation2026 } from './EStartLocation2026';
