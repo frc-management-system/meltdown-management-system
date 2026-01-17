@@ -9,7 +9,14 @@ import {
   Divider,
   Pressable,
 } from '@react-native-material/core';
-import { Image, StyleSheet, Dimensions } from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from 'react-native';
 import { RadioButtonList } from '../basics/RadioButtonList';
 import { EAssignmentActionType, TRootStackParamList } from '../../../types';
 import { EEndgameLocation2026, ETowerLevel2026 } from '../../../../common/types/2026';
@@ -60,82 +67,90 @@ export function Endgame({ navigation }: PEndgameScreenProps): React.JSX.Element 
   };
 
   return (
-    <Box style={styles.autoContainer}>
-      <Text variant="h4">Endgame</Text>
-      <HStack spacing={2}>
-        <VStack>
-          <Text variant="h6">Tower:</Text>
-          <RadioButtonList
-            labels={Object.values(ETowerLevel2026)}
-            direction="row"
-            selected={towerLevel}
-            setSelected={(value: ETowerLevel2026) => {
-              setTowerLevel(value);
-            }}
-          />
-          <Divider />
-          <Text variant="h6">Defense Rating:</Text>
-          <RadioButtonList
-            labels={Array.from({ length: 6 }, (_, i) => `${i}`)}
-            direction="row"
-            selected={defenseRating}
-            setSelected={(value: string) => {
-              setDefenseRating(value);
-            }}
-            maxPerRow={3}
-          />
-          <Divider />
-          <TextInput
-            label="Notes"
-            variant="outlined"
-            multiline={true}
-            numberOfLines={20}
-            textAlignVertical={'top'}
-            style={styles.textInput}
-            onChangeText={setNotes}
-            value={notes}
-          />
-        </VStack>
-        {towerLevel === ETowerLevel2026.none ? (
-          <></>
-        ) : (
-          <Box>
-            <Text variant="h6" style={{ marginTop: 10 }}>
-              Tower Position:
-            </Text>
-            <Image alt="Ending Position" source={towerImage} style={styles.endField} />
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      // On Android, passing undefined lets the OS use adjustResize naturally
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
+        <Box style={styles.autoContainer}>
+          <Text variant="h4">Endgame</Text>
+          <HStack spacing={2}>
+            <VStack>
+              <Text variant="h6">Tower:</Text>
+              <RadioButtonList
+                labels={Object.values(ETowerLevel2026)}
+                direction="row"
+                selected={towerLevel}
+                setSelected={(value: ETowerLevel2026) => {
+                  setTowerLevel(value);
+                }}
+              />
+              <Divider />
+              <Text variant="h6">Defense Rating:</Text>
+              <RadioButtonList
+                labels={Array.from({ length: 6 }, (_, i) => `${i}`)}
+                direction="row"
+                selected={defenseRating}
+                setSelected={(value: string) => {
+                  setDefenseRating(value);
+                }}
+                maxPerRow={3}
+              />
+              <Divider />
+              <TextInput
+                label="Notes"
+                variant="outlined"
+                multiline={true}
+                numberOfLines={20}
+                textAlignVertical={'top'}
+                style={styles.textInput}
+                onChangeText={setNotes}
+                value={notes}
+              />
+            </VStack>
+            {towerLevel === ETowerLevel2026.none ? (
+              <></>
+            ) : (
+              <Box>
+                <Text variant="h6" style={{ marginTop: 10 }}>
+                  Tower Position:
+                </Text>
+                <Image alt="Ending Position" source={towerImage} style={styles.endField} />
 
-            {posStyles.map((style, i) => {
-              return (
-                <Pressable
-                  key={i}
-                  // eslint-disable-next-line react-native/no-color-literals, react-native/no-inline-styles
-                  style={{
-                    ...style,
-                    backgroundColor: endPosPressed[i] ? 'rgba(0,200,0,0.5)' : 'rgba(0,0,0,0)',
-                  }}
-                  onPress={() => {
-                    const newArr = new Array(locations.length).fill(false);
-                    newArr[i] = true;
-                    setEndPosPressed(newArr);
-                  }}
-                />
-              );
-            })}
-          </Box>
-        )}
-      </HStack>
+                {posStyles.map((style, i) => {
+                  return (
+                    <Pressable
+                      key={i}
+                      // eslint-disable-next-line react-native/no-color-literals, react-native/no-inline-styles
+                      style={{
+                        ...style,
+                        backgroundColor: endPosPressed[i] ? 'rgba(0,200,0,0.5)' : 'rgba(0,0,0,0)',
+                      }}
+                      onPress={() => {
+                        const newArr = new Array(locations.length).fill(false);
+                        newArr[i] = true;
+                        setEndPosPressed(newArr);
+                      }}
+                    />
+                  );
+                })}
+              </Box>
+            )}
+          </HStack>
 
-      <HStack>
-        <Button
-          title="Submit"
-          compact
-          variant="contained"
-          onPress={onSubmit}
-          style={styles.button}
-        />
-      </HStack>
-    </Box>
+          <HStack>
+            <Button
+              title="Submit"
+              compact
+              variant="contained"
+              onPress={onSubmit}
+              style={styles.button}
+            />
+          </HStack>
+        </Box>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 

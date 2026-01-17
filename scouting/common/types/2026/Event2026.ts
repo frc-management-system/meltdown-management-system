@@ -1,19 +1,19 @@
 import { EEventTypes } from '..';
 import { ETowerLevel2026 as ETowerLevel2026 } from './ETowerLevel2026';
 import { EEndgameLocation2026 } from './EEndgameLocation2026';
-import { EPassingRating2026 } from './EPassingRating2026';
 import { EPickupLocation2026 } from './EPickupLocation2026';
 import { EScoreLocation2026 } from './EScoreLocation2026';
 import { EStartLocation2026 } from './EStartLocation2026';
-import { ERating2026 as ERating2026 } from '.';
+import { ERating2026 } from './ERating2026';
 
 class ClassEvent2026 {
   type?: EEventTypes = EEventTypes.start;
   timestamp?: number = 0;
-  location?: EStartLocation2026 | EPickupLocation2026 | EScoreLocation2026 | EEndgameLocation2026;
-  towerLevel?: ETowerLevel2026;
-  rating?: ERating2026;
-  duration?: number;
+  location?: EStartLocation2026 | EPickupLocation2026 | EScoreLocation2026 | EEndgameLocation2026 =
+    EStartLocation2026.hub;
+  towerLevel?: ETowerLevel2026 = ETowerLevel2026.none;
+  rating?: ERating2026 = ERating2026.average;
+  duration?: number = 0;
   preloadFuel?: number = 0;
   accuracy?: number = 0;
   autoClimb?: boolean = false;
