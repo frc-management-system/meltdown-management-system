@@ -185,14 +185,14 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
           <></>
         )}
         {inCycle && isScoring ? (
-          posStyles.map((style, i) => {
+          (assignment.alliance === 'BLUE' ? bluePosStyles : redPosStyles).map((style, i) => {
             return (
               <Pressable
                 key={i}
                 // eslint-disable-next-line react-native/no-color-literals, react-native/no-inline-styles
                 style={{
                   ...style,
-                  // backgroundColor: scorePosPressed[i] ? 'rgba(0,200,0,0.5)' : 'rgba(0,0,0,0)',
+                  backgroundColor: scorePosPressed[i] ? 'rgba(0,200,0,0.5)' : 'rgba(0,0,0,0)',
                 }}
                 onPress={() => {
                   const newArr = new Array(locations.length).fill(false);
@@ -241,13 +241,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     width: 400,
-    transform: [{ rotate: '-90deg' }],
+    transform: [{ rotate: '90deg' }],
     objectFit: 'fill',
   },
   images: {
     marginTop: 10,
   },
-  leftTrench: {
+  redLeftTrench: {
     height: 100,
     left: FieldAreaLeft + 270,
     position: 'absolute',
@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
     width: 225,
     backgroundColor: 'rgba(255, 0, 0, 0.5)',
   },
-  hub: {
+  redHub: {
     height: 200,
     left: FieldAreaLeft + 270,
     position: 'absolute',
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
     width: 225,
     backgroundColor: 'rgba(0, 255, 0, 0.5)',
   },
-  midfield: {
+  redMidfield: {
     height: 300,
     left: FieldAreaLeft,
     position: 'absolute',
@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
     width: 270,
     backgroundColor: 'rgba(0, 0, 255, 0.5)',
   },
-  outpost: {
+  redOutpost: {
     height: 100,
     left: FieldAreaLeft,
     position: 'absolute',
@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
     width: 150,
     backgroundColor: 'rgba(150, 0, 50, 0.5)',
   },
-  rightTrench: {
+  redRightTrench: {
     height: 100,
     left: FieldAreaLeft + 270,
     position: 'absolute',
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
     width: 225,
     backgroundColor: 'rgba(200, 100, 0, 0.5)',
   },
-  midField2: {
+  redMidField2: {
     height: 100,
     left: FieldAreaLeft + 150,
     position: 'absolute',
@@ -295,22 +295,70 @@ const styles = StyleSheet.create({
     width: 120,
     backgroundColor: 'rgba(0, 0, 255, 0.5)',
   },
-  interactiveOverlay: {
-    ...StyleSheet.absoluteFillObject, // Sits exactly on top of the field image
-    backgroundColor: 'transparent',
+  blueLeftTrench: {
+    height: 100,
+    left: FieldAreaLeft,
+    position: 'absolute',
+    top: FieldAreaTop + 300,
+    width: 225,
+    backgroundColor: 'rgba(255, 0, 0, 0.5)',
   },
-  mirroredLayer: {
-    // scaleX: -1 flips across the Y axis (left becomes right)
-    // scaleY: -1 flips across the X axis (bottom becomes top)
-    transform: [{ scaleX: -1 }, { scaleY: -1 }],
+  blueHub: {
+    height: 200,
+    left: FieldAreaLeft,
+    position: 'absolute',
+    top: FieldAreaTop + 100,
+    width: 225,
+    backgroundColor: 'rgba(0, 255, 0, 0.5)',
+  },
+  blueMidfield: {
+    height: 300,
+    left: FieldAreaLeft + 225,
+    position: 'absolute',
+    top: FieldAreaTop + 100,
+    width: 270,
+    backgroundColor: 'rgba(0, 0, 255, 0.5)',
+  },
+  blueOutpost: {
+    height: 100,
+    left: FieldAreaLeft + 345,
+    position: 'absolute',
+    top: FieldAreaTop,
+    width: 150,
+    backgroundColor: 'rgba(150, 0, 50, 0.5)',
+  },
+  blueRightTrench: {
+    height: 100,
+    left: FieldAreaLeft,
+    position: 'absolute',
+    top: FieldAreaTop,
+    width: 225,
+    backgroundColor: 'rgba(200, 100, 0, 0.5)',
+  },
+  blueMidField2: {
+    height: 100,
+    left: FieldAreaLeft + 225,
+    position: 'absolute',
+    top: FieldAreaTop,
+    width: 120,
+    backgroundColor: 'rgba(0, 0, 255, 0.5)',
   },
 });
 
-const posStyles = [
-  styles.leftTrench,
-  styles.midfield,
-  styles.hub,
-  styles.outpost,
-  styles.rightTrench,
-  styles.midField2,
+const redPosStyles = [
+  styles.redLeftTrench,
+  styles.redMidfield,
+  styles.redHub,
+  styles.redOutpost,
+  styles.redRightTrench,
+  styles.redMidField2,
+];
+
+const bluePosStyles = [
+  styles.blueLeftTrench,
+  styles.blueMidfield,
+  styles.blueHub,
+  styles.blueOutpost,
+  styles.blueRightTrench,
+  styles.blueMidField2,
 ];
