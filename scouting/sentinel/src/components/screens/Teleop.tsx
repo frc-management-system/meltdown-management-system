@@ -12,6 +12,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useLog } from '../../contexts/LogContext';
 import { ButtonList } from '../basics/ButtonList';
 import { ERating2026, EScoreLocation2026 } from '../../../../common/types/2026';
+import { useTimer } from '../../hooks/Timer';
 
 export type PTeleop = NativeStackScreenProps<TRootStackParamList, 'Teleop'>;
 
@@ -21,23 +22,78 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
   locations.push(EScoreLocation2026.trench);
   locations.push(EScoreLocation2026.midfield);
   const [scorePosPressed, setScorePosPressed] = useState(new Array(locations.length).fill(false));
+  const [scoreLocation, setScoreLocation] = useState<EScoreLocation2026>();
 
   const [inCycle, setInCycle] = useState<boolean>(false);
+  const [isScoring, setIsScoring] = useState<boolean>(false);
   const [currentRating, setCurrentRating] = useState<ERating2026>();
+  const [selectedAccuracy, setSelectedAccuracy] = useState<keyof typeof EAccuracy>();
 
   const assignment: TAssignment = useAssignment();
   const log: TLogActions = useLog();
+  const timer = useTimer();
 
   const startCycle: (key: keyof typeof ERating2026) => void = (key: keyof typeof ERating2026) => {
     setInCycle(true);
+    setCurrentRating(ERating2026[key]);
+    timer.start();
   };
 
-  const endCycle: () => void = () => {};
+  const startScoring: (key: keyof typeof ERating2026) => void = (key: keyof typeof ERating2026) => {
+    setIsScoring(true);
+    startCycle(key);
+  };
+
+  const startPassing: (key: keyof typeof ERating2026) => void = (key: keyof typeof ERating2026) => {
+    setIsScoring(false);
+    startCycle(key);
+  };
+
+  const cleanupCycle: () => void = () => {
+    setCurrentRating(null);
+    setIsScoring(false);
+    setSelectedAccuracy(null);
+    setInCycle(false);
+    setScorePosPressed(new Array(locations.length).fill(false));
+    setScoreLocation(null);
+    timer.reset();
+  };
+
+  const endCycle: (scorePos: EScoreLocation2026, accuracy: keyof typeof EAccuracy) => void = (
+    scorePos: EScoreLocation2026,
+    accuracyKey: keyof typeof EAccuracy
+  ) => {
+    if (!currentRating || (!scorePos && isScoring) || !accuracyKey) {
+      return;
+    }
+
+    let accuracy = 0;
+    switch (accuracyKey) {
+      case 'quarter':
+        accuracy = 0.25;
+        break;
+      case 'half':
+        accuracy = 0.5;
+        break;
+      case 'threeQuarter':
+        accuracy = 0.75;
+        break;
+      case 'full':
+        accuracy = 1;
+    }
+
+    if (isScoring) {
+      log.addScoreEvent(scorePos, currentRating, accuracy, timer.getTimeSeconds());
+    } else {
+      log.addPassingEvent(currentRating, accuracy, timer.getTimeSeconds());
+    }
+    cleanupCycle();
+  };
 
   const toEndgame: () => void = (): void => {
     log.addAutoEvent(autoClimb === 'checked');
 
-    setScorePosPressed(new Array(locations.length).fill(false));
+    cleanupCycle();
 
     navigation.navigate('Endgame');
   };
@@ -61,48 +117,90 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
         <HStack divider={<Divider />} spacing={20} style={{ marginLeft: 20 }}>
           <VStack spacing={5}>
             <Text variant="h6">Scoring:</Text>
-            <ButtonList enumProp={ERating2026} onPress={startCycle} />
+            <ButtonList
+              enumProp={ERating2026}
+              onPress={startScoring}
+              onPressOut={() => {
+                timer.pause();
+              }}
+            />
           </VStack>
           <VStack spacing={5}>
             <Text variant="h6">Passing:</Text>
-            <ButtonList enumProp={ERating2026} onPress={startCycle} />
-          </VStack>
-          <VStack>
-            <Text variant="h6">Location:</Text>
-            <Box style={{ width: 450 }}></Box>
-          </VStack>
-          <VStack spacing={5}>
-            <Text variant="h6">Accuracy:</Text>
             <ButtonList
-              enumProp={EAccuracy}
-              onPress={(key: keyof typeof EAccuracy) => {
-                console.log(key);
+              enumProp={ERating2026}
+              onPress={startPassing}
+              onPressOut={() => {
+                timer.pause();
               }}
             />
           </VStack>
+          {inCycle && isScoring ? (
+            <VStack>
+              <Text variant="h6">Location:</Text>
+              <Box style={{ width: 450 }}></Box>
+            </VStack>
+          ) : (
+            <></>
+          )}
+          {inCycle ? (
+            <VStack spacing={5}>
+              <Text variant="h6">Accuracy:</Text>
+              <ButtonList
+                enumProp={EAccuracy}
+                onPress={(key: keyof typeof EAccuracy) => {
+                  setSelectedAccuracy(key);
+                  endCycle(scoreLocation, key);
+                }}
+                selectedKey={selectedAccuracy}
+              />
+            </VStack>
+          ) : (
+            <></>
+          )}
         </HStack>
-        <Image
-          alt="Reef"
-          source={assignment.alliance === 'BLUE' ? blueFieldImage : redFieldImage}
-          style={styles.field}
-        />
-        {posStyles.map((style, i) => {
-          return (
-            <Pressable
-              key={i}
-              // eslint-disable-next-line react-native/no-color-literals, react-native/no-inline-styles
-              style={{
-                ...style,
-                backgroundColor: scorePosPressed[i] ? 'rgba(0,200,0,0.5)' : 'rgba(0,0,0,0)',
-              }}
-              onPress={() => {
-                const newArr = new Array(3).fill(false);
-                newArr[i] = true;
-                setScorePosPressed(newArr);
-              }}
-            />
-          );
-        })}
+        {inCycle && isScoring ? (
+          <Image
+            alt="Reef"
+            source={assignment.alliance === 'BLUE' ? blueFieldImage : redFieldImage}
+            style={styles.field}
+          />
+        ) : (
+          <></>
+        )}
+        {inCycle && isScoring ? (
+          posStyles.map((style, i) => {
+            return (
+              <Pressable
+                key={i}
+                // eslint-disable-next-line react-native/no-color-literals, react-native/no-inline-styles
+                style={{
+                  ...style,
+                  backgroundColor: scorePosPressed[i] ? 'rgba(0,200,0,0.5)' : 'rgba(0,0,0,0)',
+                }}
+                onPress={() => {
+                  const newArr = new Array(locations.length).fill(false);
+                  newArr[i] = true;
+                  setScorePosPressed(newArr);
+
+                  let scorePos: EScoreLocation2026 = null;
+
+                  locations.forEach((location, i) => {
+                    if (newArr[i]) {
+                      scorePos = location;
+                    }
+                  });
+
+                  setScoreLocation(scorePos);
+
+                  endCycle(scorePos, selectedAccuracy);
+                }}
+              />
+            );
+          })
+        ) : (
+          <></>
+        )}
       </Box>
     </Box>
   );

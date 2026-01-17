@@ -4,44 +4,53 @@ import React, { useState } from 'react';
 export type PButtonList<EnumType extends object> = {
   enumProp: EnumType;
   onPress: (key: keyof EnumType) => void;
+  onPressOut?: () => void | null;
+  selectedKey?: keyof EnumType | null; // Added prop for selection state
 };
 
 export function ButtonList<EnumType extends object>({
   enumProp,
-  onPress: onPress,
+  onPress,
+  selectedKey,
+  onPressOut,
 }: PButtonList<EnumType>): React.JSX.Element {
-  // Track which item is currently being pressed by its key
+  // activeKey handles the momentary "tap" visual feedback
   const [activeKey, setActiveKey] = useState<string | null>(null);
 
   return (
     <VStack spacing={20}>
-      {Object.keys(enumProp).map((key: string) => {
-        const isPressed = activeKey === key;
+      {(Object.keys(enumProp) as Array<keyof EnumType>).map((key) => {
+        const stringKey = String(key);
+        // Highlight if currently being pressed OR if it is the selected item
+        const isFilled = activeKey === stringKey || selectedKey === key;
 
         return (
           <Pressable
-            key={key}
-            onPressIn={() => setActiveKey(key)}
-            onPressOut={() => setActiveKey(null)}
-            onPress={() => onPress(key as keyof EnumType)}
+            key={stringKey}
+            onPressIn={() => setActiveKey(stringKey)}
+            onPressOut={() => {
+              setActiveKey(null);
+              if (onPressOut) {
+                onPressOut();
+              }
+            }}
+            onPress={() => onPress(key)}
             style={{
               padding: 20,
               borderRadius: 12,
               borderWidth: 2,
               borderColor: '#6200EE',
-              // Solid fill color when active
-              backgroundColor: isPressed ? '#6200EE' : 'transparent',
+              backgroundColor: isFilled ? '#6200EE' : 'transparent',
               alignItems: 'center',
             }}
           >
             <Text
               variant="h6"
               style={{
-                // Invert text color when background is filled
-                color: isPressed ? '#FFFFFF' : '#6200EE',
+                color: isFilled ? '#FFFFFF' : '#6200EE',
               }}
             >
-              {`${enumProp[key as keyof EnumType]}`}
+              {`${enumProp[key]}`}
             </Text>
           </Pressable>
         );

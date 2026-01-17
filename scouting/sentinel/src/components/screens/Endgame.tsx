@@ -115,7 +115,7 @@ export function Endgame({ navigation }: PEndgameScreenProps): React.JSX.Element 
                     backgroundColor: endPosPressed[i] ? 'rgba(0,200,0,0.5)' : 'rgba(0,0,0,0)',
                   }}
                   onPress={() => {
-                    const newArr = new Array(3).fill(false);
+                    const newArr = new Array(locations.length).fill(false);
                     newArr[i] = true;
                     setEndPosPressed(newArr);
                   }}
