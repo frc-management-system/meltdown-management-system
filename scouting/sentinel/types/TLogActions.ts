@@ -1,23 +1,25 @@
 import {
-  EStartLocation2025,
-  EPickupLocation2025,
-  EScoreLocation2025,
-  EEndgameLocation2025,
-} from '../../common/types/2025';
-import { ERobotState } from './ERobotState';
+  EEndgameLocation2026,
+  EScoreLocation2026,
+  ERating2026,
+  EStartLocation2026,
+  ETowerLevel2026,
+} from '../../common/types/2026';
 
 export type TLogActions = {
-  addStartEvent: (location: EStartLocation2025) => void;
-  addPickupEvent: (location: EPickupLocation2025, gamepiece: ERobotState) => void;
-  modifyLastPickupEvent: (location: EPickupLocation2025) => void;
-  addDropEvent: (gamepiece: ERobotState) => void;
-  addScoreEvent: (location: EScoreLocation2025) => void;
-  miss: () => void;
-  addAutoEvent: (leave: boolean) => void;
+  addStartEvent: (location: EStartLocation2026, preloadFuel: number) => void;
+  addScoreEvent: (
+    location: EScoreLocation2026,
+    rating: ERating2026,
+    accuracy: number,
+    duration: number
+  ) => void;
+  addPassingEvent: (rating: ERating2026, accuracy: number, duration: number) => void;
+  addAutoEvent: (autoClimb: boolean) => void;
   addEndgameEvent: (
-    location: EEndgameLocation2025,
+    location: EEndgameLocation2026,
     notes: string,
-    clearAlgae: number,
-    defenseRating: number
+    defenseRating: number,
+    towerLevel: ETowerLevel2026
   ) => void;
 };

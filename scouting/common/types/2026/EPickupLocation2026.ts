@@ -1,1 +1,5 @@
-export enum EPickupLocation2026 {}
+export enum EPickupLocation2026 {
+  depot = 'depot',
+  outpost = 'outpost',
+  floor = 'floor',
+}

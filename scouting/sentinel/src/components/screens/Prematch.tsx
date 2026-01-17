@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Box, Text, Button, Pressable, HStack, Spacer } from '@react-native-material/core';
 import { Image, StyleSheet } from 'react-native';
 import { RadioButtonList } from '../basics/RadioButtonList';
-import { ERobotState, TRootStackParamList } from '../../../types';
-import { EStartLocation2025 } from '../../../../common/types/2025';
-import blueAutoFieldImage from '../../../assets/blueAutoField.png';
-import redAutoFieldImage from '../../../assets/redAutoField.png';
+import { TRootStackParamList } from '../../../types';
+import { EStartLocation2026 } from '../../../../common/types/2026';
+import blueAutoFieldImage from '../../../assets/blueField.png';
+import redAutoFieldImage from '../../../assets/redField.png';
 import { AssignmentTable } from '../tables/AssignmentTable';
 import { useLog } from '../../contexts/LogContext';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -14,19 +14,19 @@ import { useAssignment } from '../../contexts/AssignmentContext';
 export type PPrematchScreen = NativeStackScreenProps<TRootStackParamList, 'Prematch'>;
 
 export function Prematch({ navigation }: PPrematchScreen): React.JSX.Element {
-  const locations: EStartLocation2025[] = Object.values(EStartLocation2025);
+  const locations: EStartLocation2026[] = Object.values(EStartLocation2026);
 
   const [startPosPressed, setStartPosPressed] = useState(new Array(locations.length).fill(false));
-  const [preload, setPreload] = useState(ERobotState.empty);
+  const [preloadFuel, setPreloadFuel] = useState('0');
   const log = useLog();
   const assignment = useAssignment();
 
   const onEdit = () => {
     navigation.navigate('EditAssignment');
-  }
+  };
 
   const onConfirm = () => {
-    let startPos: EStartLocation2025 = EStartLocation2025.center;
+    let startPos: EStartLocation2026 = EStartLocation2026.hub;
 
     locations.forEach((location, i) => {
       if (startPosPressed[i]) {
@@ -35,11 +35,11 @@ export function Prematch({ navigation }: PPrematchScreen): React.JSX.Element {
     });
 
     setStartPosPressed(new Array(locations.length).fill(false));
-    setPreload(ERobotState.empty);
+    setPreloadFuel('0');
 
-    log.addStartEvent(startPos);
+    log.addStartEvent(startPos, +preloadFuel);
 
-    navigation.navigate('Teleop', { initialRobotState: preload });
+    navigation.navigate('Teleop');
   };
 
   return (
@@ -48,14 +48,14 @@ export function Prematch({ navigation }: PPrematchScreen): React.JSX.Element {
       <HStack spacing={2}>
         <AssignmentTable />
         <Box>
-          <Button title="Edit Assignment" onPress={onEdit}/>
+          <Button title="Edit Assignment" onPress={onEdit} />
           <Box style={styles.form}>
-            <Text variant="h6">Pre-Load:</Text>
+            <Text variant="h6">Fuel Pre-Load:</Text>
             <RadioButtonList
               direction="row"
-              labels={[ERobotState.coral, ERobotState.empty]}
-              selected={preload}
-              setSelected={(value: ERobotState) => setPreload(value)}
+              labels={['0', '1', '2', '3', '4', '5', '6', '7', '8']}
+              selected={preloadFuel}
+              setSelected={(value: string) => setPreloadFuel(value)}
             />
             <Text variant="h5">Press start location:</Text>
           </Box>
@@ -74,10 +74,10 @@ export function Prematch({ navigation }: PPrematchScreen): React.JSX.Element {
             // eslint-disable-next-line react-native/no-color-literals, react-native/no-inline-styles
             style={{
               ...style,
-              backgroundColor: startPosPressed[i] ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0)',
+              backgroundColor: startPosPressed[i] ? 'rgba(0,200,0,0.5)' : 'rgba(0,0,0,0)',
             }}
             onPress={() => {
-              const newArr = new Array(3).fill(false);
+              const newArr = new Array(locations.length).fill(false);
               newArr[i] = true;
               setStartPosPressed(newArr);
             }}
@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: autoAreaTop,
     width: 1000,
+    objectFit: 'fill',
   },
   confirm: {
     position: 'absolute',
@@ -107,28 +108,48 @@ const styles = StyleSheet.create({
   },
   form: {
     marginLeft: 50,
-    marginTop: 80,
+    marginTop: 30,
   },
-  left: {
+  leftTrench: {
     height: 225,
     left: autoAreaLeft,
     position: 'absolute',
     top: autoAreaTop,
-    width: 333,
+    width: 200,
   },
-  center: {
+  leftBump: {
     height: 225,
-    left: autoAreaLeft + 333,
+    left: autoAreaLeft + 200,
     position: 'absolute',
     top: autoAreaTop,
-    width: 333,
+    width: 200,
   },
-  right: {
+  hub: {
     height: 225,
-    left: autoAreaLeft + 666,
+    left: autoAreaLeft + 400,
     position: 'absolute',
     top: autoAreaTop,
-    width: 333,
+    width: 200,
+  },
+  rightBump: {
+    height: 225,
+    left: autoAreaLeft + 600,
+    position: 'absolute',
+    top: autoAreaTop,
+    width: 200,
+  },
+  rightTrench: {
+    height: 225,
+    left: autoAreaLeft + 800,
+    position: 'absolute',
+    top: autoAreaTop,
+    width: 200,
   },
 });
-const posStyles = [styles.left, styles.center, styles.right];
+const posStyles = [
+  styles.leftBump,
+  styles.leftTrench,
+  styles.hub,
+  styles.rightBump,
+  styles.rightTrench,
+];

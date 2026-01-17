@@ -1,19 +1,23 @@
 import { EEventTypes } from '..';
-import { ERobotState } from '../../../sentinel/types';
+import { ETowerLevel2026 as ETowerLevel2026 } from './ETowerLevel2026';
 import { EEndgameLocation2026 } from './EEndgameLocation2026';
+import { EPassingRating2026 } from './EPassingRating2026';
 import { EPickupLocation2026 } from './EPickupLocation2026';
 import { EScoreLocation2026 } from './EScoreLocation2026';
 import { EStartLocation2026 } from './EStartLocation2026';
+import { ERating2026 as ERating2026 } from '.';
 
 class ClassEvent2026 {
   type?: EEventTypes = EEventTypes.start;
   timestamp?: number = 0;
   location?: EStartLocation2026 | EPickupLocation2026 | EScoreLocation2026 | EEndgameLocation2026;
-  gamepiece?: ERobotState = ERobotState.empty;
-  miss?: boolean = false;
-  leave?: boolean = false;
+  towerLevel?: ETowerLevel2026;
+  rating?: ERating2026;
+  duration?: number;
+  preloadFuel?: number = 0;
+  accuracy?: number = 0;
+  autoClimb?: boolean = false;
   notes?: string = '';
-  clearAlgae?: number = 0;
   defenseRating?: number = 0;
 }
 
