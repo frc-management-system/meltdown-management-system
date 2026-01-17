@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 export type PButtonList<EnumType extends object> = {
   enumProp: EnumType;
   onPress: (key: keyof EnumType) => void;
+  onPressIn?: () => void | null;
   onPressOut?: () => void | null;
   selectedKey?: keyof EnumType | null; // Added prop for selection state
 };
@@ -11,8 +12,9 @@ export type PButtonList<EnumType extends object> = {
 export function ButtonList<EnumType extends object>({
   enumProp,
   onPress,
-  selectedKey,
+  onPressIn,
   onPressOut,
+  selectedKey,
 }: PButtonList<EnumType>): React.JSX.Element {
   // activeKey handles the momentary "tap" visual feedback
   const [activeKey, setActiveKey] = useState<string | null>(null);
@@ -27,7 +29,12 @@ export function ButtonList<EnumType extends object>({
         return (
           <Pressable
             key={stringKey}
-            onPressIn={() => setActiveKey(stringKey)}
+            onPressIn={() => {
+              setActiveKey(stringKey);
+              if (onPressIn) {
+                onPressIn();
+              }
+            }}
             onPressOut={() => {
               setActiveKey(null);
               if (onPressOut) {

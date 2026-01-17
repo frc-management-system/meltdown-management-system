@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Box, Button, Divider, HStack, Pressable, Text, VStack } from '@react-native-material/core';
 import { Image, StyleSheet } from 'react-native';
 import { RadioButton } from 'react-native-paper';
@@ -12,7 +12,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useLog } from '../../contexts/LogContext';
 import { ButtonList } from '../basics/ButtonList';
 import { ERating2026, EScoreLocation2026 } from '../../../../common/types/2026';
-import { useTimer } from '../../hooks/Timer';
+import { useTimer } from '../../contexts/TimerContext';
 
 export type PTeleop = NativeStackScreenProps<TRootStackParamList, 'Teleop'>;
 
@@ -28,6 +28,8 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
   const [isScoring, setIsScoring] = useState<boolean>(false);
   const [currentRating, setCurrentRating] = useState<ERating2026>();
   const [selectedAccuracy, setSelectedAccuracy] = useState<keyof typeof EAccuracy>();
+  const startCycleTime = useRef<number>(0);
+  const cycleDuration = useRef<number>(0);
 
   const assignment: TAssignment = useAssignment();
   const log: TLogActions = useLog();
@@ -36,7 +38,6 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
   const startCycle: (key: keyof typeof ERating2026) => void = (key: keyof typeof ERating2026) => {
     setInCycle(true);
     setCurrentRating(ERating2026[key]);
-    timer.start();
   };
 
   const startScoring: (key: keyof typeof ERating2026) => void = (key: keyof typeof ERating2026) => {
@@ -56,7 +57,8 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
     setInCycle(false);
     setScorePosPressed(new Array(locations.length).fill(false));
     setScoreLocation(null);
-    timer.reset();
+    cycleDuration.current = 0;
+    startCycleTime.current = 0;
   };
 
   const endCycle: (scorePos: EScoreLocation2026, accuracy: keyof typeof EAccuracy) => void = (
@@ -120,8 +122,14 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
             <ButtonList
               enumProp={ERating2026}
               onPress={startScoring}
+              onPressIn={() => {
+                if (startCycleTime.current === 0) {
+                  startCycleTime.current = timer.getTimeSeconds();
+                }
+              }}
               onPressOut={() => {
-                timer.pause();
+                cycleDuration.current += timer.getTimeSeconds() - startCycleTime.current;
+                startCycleTime.current = 0;
               }}
             />
           </VStack>
@@ -130,8 +138,14 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
             <ButtonList
               enumProp={ERating2026}
               onPress={startPassing}
+              onPressIn={() => {
+                if (startCycleTime.current === 0) {
+                  startCycleTime.current = timer.getTimeSeconds();
+                }
+              }}
               onPressOut={() => {
-                timer.pause();
+                cycleDuration.current += timer.getTimeSeconds() - startCycleTime.current;
+                startCycleTime.current = 0;
               }}
             />
           </VStack>
