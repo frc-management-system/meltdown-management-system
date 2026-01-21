@@ -18,6 +18,28 @@ def s3_iter(object_name: str):
 def isAuto(time: str):
   return float(time) < 15
 
+def endgameStrToNum(level: str):
+  if level == 'none':
+    return 0
+  if level == 'level 1':
+    return 1
+  if level == 'level 2':
+    return 2
+  if level == 'level 3':
+    return 3
+
+def ratingStrToNum(rating: str):
+  if rating == 'slow':
+    return 1
+  if rating == 'semi-slow':
+    return 2
+  if rating == 'average':
+    return 3
+  if rating == 'semi-fast':
+    return 4
+  if rating == 'fast':
+    return 5
+
 def load_match_data(object_name: str) -> dict:
   reader = csv.DictReader(s3_iter(object_name), delimiter=',', quotechar='"')
 
@@ -33,28 +55,28 @@ def load_match_data(object_name: str) -> dict:
       "team-match": key,
       "alliancePosition": f"{line['alliance'][0]}{line['alliancePos']}",
       "startLocation": "",
-      "autoLeave": 0,
-      "end": "",
+      "autoClimb": 0, 
+      "endgame": 0, # Tower level 0-3
       "defenseRating": 0,
-      "algaeClear": 0,
       "notes": "",
-      "coralPickup": 0,
-      "autoCoral": 0,
-      "coralFloor": 0,
-      "coralStation": 0,
-      "algaeFloor": 0,
-      "coralMiss": 0,
-      "algaeMiss": 0,
-      "coralL1": 0,
-      "coralL2": 0,
-      "coralL3": 0,
-      "coralL4": 0,
-      "aCoralL1": 0,
-      "aCoralL2": 0,
-      "aCoralL3": 0,
-      "aCoralL4": 0,
-      "algaeBarge": 0,
-      "algaeProcessor": 0
+      "totalAutoFuelShootingDuration": 0,
+      "averageAutoFuelShootingSpeed": 0,
+      "averageAutoFuelShootingAccuracy": 0,
+      "totalTeleopFuelShootingDuration": 0,
+      "averageTeleopFuelShootingSpeed": 0,
+      "averageTeleopFuelShootingAccuracy": 0,
+      "totalTeleopFuelPassingDuration": 0,
+      "averageTeleopFuelPassingSpeed": 0,
+      "averageTeleopFuelPassingAccuracy": 0,
+      "totalAutoCycles": 0,
+      "totalPassCycles": 0,
+      "totalTeleopCycles": 0,
+      "totalAutoRating": 0,
+      "totalAutoAccuracy": 0,
+      "totalTeleopRating": 0,
+      "totalTeleopAccuracy": 0,
+      "totalPassRating": 0,
+      "totalPassAccuracy": 0 
       }
       prevKey = key
       items.append(item)
@@ -62,51 +84,38 @@ def load_match_data(object_name: str) -> dict:
       case "start":
         item["startLocation"] = line["location"]
       case "auto":
-        item["autoLeave"] = 1 if line["leave"] == "TRUE" else 0
+        item["autoClimb"] = 1 if line["autoClimb"] == "TRUE" else 0
       case "endgame":
-        item["end"] = line["location"]
+        item["endgame"] = endgameStrToNum(line["towerLevel"])
         item["defenseRating"] = line["defenseRating"]
-        item["algaeClear"] = line["clearAlgae"]
         item["notes"] = f"\"{line["notes"]}\""
-      case "pickup":
-        if (isAuto(line["timestamp"]) and line["gamepiece"] == "coral"):
-          item["autoCoral"] += 1
-        elif line["gamepiece"] == "coral":
-          item["coralPickup"] += 1
-          if line["location"] == "floor":
-            item["coralFloor"] += 1
-          else:
-            item["coralStation"] += 1
-        else:
-          item["algaeFloor"] += 1
-      case "drop":
-        if (line["gamepiece"] == "coral"):
-          item["coralMiss"] += 1
-        else:
-          item["algaeMiss"] += 1
-      case "score":
-          prefix = "aC" if isAuto(line["timestamp"]) else "c"
-          
-          if (line["miss"] == "TRUE" and line["location"] in ["reefL1", "reefL2", "reefL3", "reefL4"]):
-            item["coralMiss"] += 1
-            continue
-          elif (line["miss"] == "TRUE" and line["location"] in ["net", "processor"]):
-            item["algaeMiss"] += 1
-            continue
+      case "pass":
+        item["totalTeleopFuelPassingDuration"] += float(line["duration"])
+        item["totalPassCycles"] += 1
 
-          match line["location"]:
-            case "reefL1":  
-              item[f"{prefix}oralL1"] +=  1
-            case "reefL2":
-              item[f"{prefix}oralL2"] += 1
-            case "reefL3":
-              item[f"{prefix}oralL3"] += 1
-            case "reefL4":
-              item[f"{prefix}oralL4"] += 1
-            case "net":
-                item["algaeBarge"] += 1
-            case "processor":
-              item["algaeProcessor"] += 1
+        item["totalPassRating"] += ratingStrToNum(line["rating"])
+        item["totalPassAccuracy"] += float(line["accuracy"])
+        item["averageTeleopFuelPassingSpeed"] = item["totalPassRating"] / item["totalPassCycles"]
+        item["averageTeleopFuelPassingAccuracy"] = item["totalPassAccuracy"] / item["totalPassCycles"]
+      case "score":
+        if isAuto(line["timestamp"]):
+          item["totalAutoFuelShootingDuration"] += float(line["duration"])
+          item["totalAutoCycles"] += 1
+
+          item["totalAutoRating"] += ratingStrToNum(line["rating"])
+          item["totalAutoAccuracy"] += float(line["accuracy"])
+          item["averageAutoFuelShootingSpeed"] = item["totalAutoRating"] / item["totalAutoCycles"]
+          item["averageAutoFuelShootingAccuracy"] = item["totalAutoAccuracy"] / item["totalAutoCycles"]
+
+        else:
+          item["totalTeleopFuelShootingDuration"] += float(line["duration"])
+          item["totalTeleopCycles"] += 1
+
+          item["totalTeleopRating"] += ratingStrToNum(line["rating"])
+          item["totalTeleopAccuracy"] += float(line["accuracy"])
+          item["averageTeleopFuelShootingSpeed"] = item["totalTeleopRating"] / item["totalTeleopCycles"]
+          item["averageTeleopFuelShootingAccuracy"] = item["totalAutoAccuracy"] / item["totalTeleopCycles"]
+
 
   output = []
   keys = items[0].keys()
