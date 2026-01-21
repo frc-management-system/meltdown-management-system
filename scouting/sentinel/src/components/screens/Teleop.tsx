@@ -85,9 +85,11 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
     }
 
     if (isScoring) {
-      log.addScoreEvent(scorePos, currentRating, accuracy, timer.getTimeSeconds());
+      console.log(cycleDuration);
+      log.addScoreEvent(scorePos, currentRating, accuracy, cycleDuration.current);
     } else {
-      log.addPassingEvent(currentRating, accuracy, timer.getTimeSeconds());
+      console.log(cycleDuration);
+      log.addPassingEvent(currentRating, accuracy, cycleDuration.current);
     }
     cleanupCycle();
   };
