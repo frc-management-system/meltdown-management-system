@@ -6,11 +6,11 @@ import { TLogActions } from '../../types';
 import { useFileManager } from '../hooks/useFileManager';
 import {
   EEndgameLocation2026,
-  EScoreLocation2026,
   ERating2026,
   EStartLocation2026,
   ETowerLevel2026,
   TEvent2026,
+  ECapacity2026,
 } from '../../../common/types/2026';
 
 const logDefault: TLog<TEvent2026> = {
@@ -59,26 +59,18 @@ export const useLog: () => TLogActions = (): TLogActions => {
 
       timer.start();
     },
-    addScoreEvent: (
-      location: EScoreLocation2026,
-      rating: ERating2026,
-      accuracy: number,
-      duration: number
-    ) => {
+    addScoreEvent: (capacity: ECapacity2026, duration: number) => {
       log.current.events.push({
         type: EEventTypes.score,
-        location,
-        rating,
-        accuracy,
+        capacity,
         duration,
         timestamp: timer.getTimeSeconds(),
       });
     },
-    addPassingEvent: (rating: ERating2026, accuracy: number, duration: number) => {
+    addPassingEvent: (capacity: ECapacity2026, duration: number) => {
       log.current.events.push({
         type: EEventTypes.pass,
-        rating: rating,
-        accuracy,
+        capacity,
         duration,
         timestamp: timer.getTimeSeconds(),
       });
@@ -94,7 +86,9 @@ export const useLog: () => TLogActions = (): TLogActions => {
       location: EEndgameLocation2026,
       notes: string,
       defenseRating: number,
-      towerLevel: ETowerLevel2026
+      towerLevel: ETowerLevel2026,
+      rating: ERating2026,
+      accuracy: ERating2026
     ) => {
       log.current.events.push({
         type: EEventTypes.endgame,
@@ -102,6 +96,8 @@ export const useLog: () => TLogActions = (): TLogActions => {
         notes,
         defenseRating,
         towerLevel,
+        fireRating: rating,
+        accuracy,
         timestamp: timer.getTimeSeconds(),
       });
       console.log(log.current);

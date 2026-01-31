@@ -27,15 +27,19 @@ import towerImage from '../../../assets/tower.png';
 
 const windowDimensions = Dimensions.get('window');
 
-export type PEndgameScreenProps = NativeStackScreenProps<TRootStackParamList, 'Endgame'>;
+export type PEndgameScreenProps = NativeStackScreenProps<TRootStackParamList, 'EndgameTwo'>;
 
-export function Endgame({ navigation }: PEndgameScreenProps): React.JSX.Element {
+export function EndgameTwo({
+  route: {
+    params: { accuracyRating, defenseRating, firingRating },
+  },
+  navigation,
+}: PEndgameScreenProps): React.JSX.Element {
   const locations: EEndgameLocation2026[] = Object.values(EEndgameLocation2026);
 
   const [endPosPressed, setEndPosPressed] = useState(new Array(locations.length).fill(false));
 
   const [towerLevel, setTowerLevel] = useState<ETowerLevel2026>(ETowerLevel2026.none);
-  const [defenseRating, setDefenseRating] = useState<string>('0');
 
   const [notes, setNotes] = useState('');
 
@@ -55,7 +59,14 @@ export function Endgame({ navigation }: PEndgameScreenProps): React.JSX.Element 
 
     setEndPosPressed(new Array(locations.length).fill(false));
 
-    log.addEndgameEvent(endPos, `\"${notes}\"`, +defenseRating, towerLevel);
+    log.addEndgameEvent(
+      endPos,
+      `\"${notes}\"`,
+      +defenseRating,
+      towerLevel,
+      firingRating,
+      accuracyRating
+    );
 
     assignmentDispatch({
       type: EAssignmentActionType.nextMatch,
@@ -85,17 +96,6 @@ export function Endgame({ navigation }: PEndgameScreenProps): React.JSX.Element 
                 setSelected={(value: ETowerLevel2026) => {
                   setTowerLevel(value);
                 }}
-              />
-              <Divider />
-              <Text variant="h6">Defense Rating:</Text>
-              <RadioButtonList
-                labels={Array.from({ length: 6 }, (_, i) => `${i}`)}
-                direction="row"
-                selected={defenseRating}
-                setSelected={(value: string) => {
-                  setDefenseRating(value);
-                }}
-                maxPerRow={3}
               />
               <Divider />
               <TextInput

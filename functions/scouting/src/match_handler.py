@@ -29,16 +29,16 @@ def endgameStrToNum(level: str):
     return 3
 
 def ratingStrToNum(rating: str):
-  if rating == 'slow':
+  if rating == 'none':
+    return 0
+  if rating == 'bad':
     return 1
-  if rating == 'semi-slow':
-    return 2
   if rating == 'average':
+    return 2
+  if rating == 'good':
     return 3
-  if rating == 'semi-fast':
+  if rating == 'very good':
     return 4
-  if rating == 'fast':
-    return 5
 
 def load_match_data(object_name: str) -> dict:
   reader = csv.DictReader(s3_iter(object_name), delimiter=',', quotechar='"')
@@ -57,26 +57,13 @@ def load_match_data(object_name: str) -> dict:
       "startLocation": "",
       "autoClimb": 0, 
       "endgame": 0, # Tower level 0-3
+      "fireRating": 0,
+      "accuracy": 0,
       "defenseRating": 0,
       "notes": "",
       "totalAutoFuelShootingDuration": 0,
-      "averageAutoFuelShootingSpeed": 0,
-      "averageAutoFuelShootingAccuracy": 0,
       "totalTeleopFuelShootingDuration": 0,
-      "averageTeleopFuelShootingSpeed": 0,
-      "averageTeleopFuelShootingAccuracy": 0,
       "totalTeleopFuelPassingDuration": 0,
-      "averageTeleopFuelPassingSpeed": 0,
-      "averageTeleopFuelPassingAccuracy": 0,
-      "totalAutoCycles": 0,
-      "totalPassCycles": 0,
-      "totalTeleopCycles": 0,
-      "totalAutoRating": 0,
-      "totalAutoAccuracy": 0,
-      "totalTeleopRating": 0,
-      "totalTeleopAccuracy": 0,
-      "totalPassRating": 0,
-      "totalPassAccuracy": 0 
       }
       prevKey = key
       items.append(item)
@@ -89,33 +76,17 @@ def load_match_data(object_name: str) -> dict:
         item["endgame"] = endgameStrToNum(line["towerLevel"])
         item["defenseRating"] = line["defenseRating"]
         item["notes"] = f"\"{line["notes"]}\""
+        item["fireRating"] = ratingStrToNum(line["fireRating"])
+        item["accuracy"] = ratingStrToNum(line["accuracy"])
       case "pass":
         item["totalTeleopFuelPassingDuration"] += float(line["duration"])
-        item["totalPassCycles"] += 1
-
-        item["totalPassRating"] += ratingStrToNum(line["rating"])
-        item["totalPassAccuracy"] += float(line["accuracy"])
-        item["averageTeleopFuelPassingSpeed"] = item["totalPassRating"] / item["totalPassCycles"]
-        item["averageTeleopFuelPassingAccuracy"] = item["totalPassAccuracy"] / item["totalPassCycles"]
+        
       case "score":
         if isAuto(line["timestamp"]):
           item["totalAutoFuelShootingDuration"] += float(line["duration"])
-          item["totalAutoCycles"] += 1
-
-          item["totalAutoRating"] += ratingStrToNum(line["rating"])
-          item["totalAutoAccuracy"] += float(line["accuracy"])
-          item["averageAutoFuelShootingSpeed"] = item["totalAutoRating"] / item["totalAutoCycles"]
-          item["averageAutoFuelShootingAccuracy"] = item["totalAutoAccuracy"] / item["totalAutoCycles"]
-
+          
         else:
           item["totalTeleopFuelShootingDuration"] += float(line["duration"])
-          item["totalTeleopCycles"] += 1
-
-          item["totalTeleopRating"] += ratingStrToNum(line["rating"])
-          item["totalTeleopAccuracy"] += float(line["accuracy"])
-          item["averageTeleopFuelShootingSpeed"] = item["totalTeleopRating"] / item["totalTeleopCycles"]
-          item["averageTeleopFuelShootingAccuracy"] = item["totalAutoAccuracy"] / item["totalTeleopCycles"]
-
 
   output = []
   keys = items[0].keys()

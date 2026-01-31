@@ -1,21 +1,20 @@
 import { EEventTypes } from '..';
 import { ETowerLevel2026 as ETowerLevel2026 } from './ETowerLevel2026';
 import { EEndgameLocation2026 } from './EEndgameLocation2026';
-import { EPickupLocation2026 } from './EPickupLocation2026';
-import { EScoreLocation2026 } from './EScoreLocation2026';
+import { ECapacity2026 } from './ECapacity2026';
 import { EStartLocation2026 } from './EStartLocation2026';
 import { ERating2026 } from './ERating2026';
 
 class ClassEvent2026 {
   type?: EEventTypes = EEventTypes.start;
   timestamp?: number = 0;
-  location?: EStartLocation2026 | EPickupLocation2026 | EScoreLocation2026 | EEndgameLocation2026 =
-    EStartLocation2026.hub;
+  location?: EStartLocation2026 | EEndgameLocation2026 = EStartLocation2026.hub;
+  capacity?: ECapacity2026 = ECapacity2026.hopper;
   towerLevel?: ETowerLevel2026 = ETowerLevel2026.none;
-  rating?: ERating2026 = ERating2026.average;
+  fireRating?: ERating2026 = ERating2026.none;
   duration?: number = 0;
   preloadFuel?: number = 0;
-  accuracy?: number = 0;
+  accuracy?: ERating2026 = ERating2026.none;
   autoClimb?: boolean = false;
   notes?: string = '';
   defenseRating?: number = 0;
