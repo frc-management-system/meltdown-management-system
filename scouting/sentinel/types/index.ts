@@ -5,4 +5,3 @@ export * from './EAssignmentActionType';
 export * from './TLogStructure';
 export * from './TFileManager';
 export * from './TLogActions';
-export * from './EAccuracy';

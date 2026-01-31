@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 export type PButtonList<EnumType extends object> = {
   enumProp: EnumType;
-  onPress: (key: keyof EnumType) => void;
+  onPress?: (key: keyof EnumType) => void;
   onPressIn?: () => void | null;
   onPressOut?: () => void | null;
   selectedKey?: keyof EnumType | null; // Added prop for selection state
@@ -45,7 +45,9 @@ export function ButtonList<EnumType extends object>({
               }
             }}
             onPress={() => {
-              onPress(key);
+              if (onPress) {
+                onPress(key);
+              }
             }}
             style={{
               padding: 20,

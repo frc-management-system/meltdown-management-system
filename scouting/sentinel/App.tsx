@@ -1,7 +1,8 @@
 import React from 'react';
 import { Teleop } from './src/components/screens/Teleop';
 import { Prematch } from './src/components/screens/Prematch';
-import { Endgame } from './src/components/screens/Endgame';
+import { EndgameOne } from './src/components/screens/EndgameOne';
+import { EndgameTwo } from './src/components/screens/EndgameTwo';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ERobotState, TRootStackParamList } from './types';
@@ -52,8 +53,13 @@ function App() {
                   options={{ headerShown: false }}
                 />
                 <NavStack.Screen
-                  name="Endgame"
-                  component={Endgame}
+                  name="EndgameOne"
+                  component={EndgameOne}
+                  options={{ headerShown: false }}
+                />
+                <NavStack.Screen
+                  name="EndgameTwo"
+                  component={EndgameTwo}
                   options={{ headerShown: false }}
                 />
                 <NavStack.Screen

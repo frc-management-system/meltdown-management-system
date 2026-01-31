@@ -1,7 +1,7 @@
 export enum ERating2026 {
-  fast = 'fast',
-  semiFast = 'semi-fast',
+  veryGood = 'very good',
+  good = 'good',
   average = 'average',
-  semiSlow = 'semi-slow',
-  slow = 'slow',
+  bad = 'bad',
+  none = 'none',
 }

@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { Box, Button, Divider, HStack, Pressable, Text, VStack } from '@react-native-material/core';
-import { Image, StyleSheet } from 'react-native';
+import { GestureResponderEvent, Image, StyleSheet } from 'react-native';
 import { RadioButton } from 'react-native-paper';
-import { EAccuracy, TLogActions, TRootStackParamList } from '../../../types';
+import { TLogActions, TRootStackParamList } from '../../../types';
 import { TAssignment } from '../../../../common/types';
 import blueFieldImage from '../../../assets/labeledBlueField.png';
 import redFieldImage from '../../../assets/labeledRedField.png';
@@ -11,86 +11,51 @@ import { ViewTimer } from '../basics/ViewTimer';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useLog } from '../../contexts/LogContext';
 import { ButtonList } from '../basics/ButtonList';
-import { ERating2026, EScoreLocation2026 } from '../../../../common/types/2026';
+import { ECapacity2026 } from '../../../../common/types/2026';
 import { useTimer } from '../../contexts/TimerContext';
+import fuelImage from '../../../assets/fuel.png';
 
 export type PTeleop = NativeStackScreenProps<TRootStackParamList, 'Teleop'>;
 
 export function Teleop({ navigation }: PTeleop): React.JSX.Element {
   const [autoClimb, setAutoClimb] = useState<'checked' | 'unchecked'>('unchecked');
-  const locations: EScoreLocation2026[] = Object.values(EScoreLocation2026);
-  locations.push(EScoreLocation2026.trench);
-  locations.push(EScoreLocation2026.midfield);
-  const [scorePosPressed, setScorePosPressed] = useState(new Array(locations.length).fill(false));
-  const [scoreLocation, setScoreLocation] = useState<EScoreLocation2026>();
 
-  const [inCycle, setInCycle] = useState<boolean>(false);
-  const [isScoring, setIsScoring] = useState<boolean>(false);
-  const [currentRating, setCurrentRating] = useState<ERating2026>();
-  const [selectedAccuracy, setSelectedAccuracy] = useState<keyof typeof EAccuracy>();
+  const [selectedCapacity, setSelectedCapacity] = useState<keyof typeof ECapacity2026>(
+    ECapacity2026.hopper
+  );
   const startCycleTime = useRef<number>(0);
   const cycleDuration = useRef<number>(0);
+
+  const [fuelIconVisible, setFuelIconVisible] = useState(false);
+  const [FuelIconCoords, setFuelIconCoords] = useState({ x: 0, y: 0 });
 
   const assignment: TAssignment = useAssignment();
   const log: TLogActions = useLog();
   const timer = useTimer();
 
-  const startCycle: (key: keyof typeof ERating2026) => void = (key: keyof typeof ERating2026) => {
-    setInCycle(true);
-    setCurrentRating(ERating2026[key]);
-  };
-
-  const startScoring: (key: keyof typeof ERating2026) => void = (key: keyof typeof ERating2026) => {
-    setIsScoring(true);
-    startCycle(key);
-  };
-
-  const startPassing: (key: keyof typeof ERating2026) => void = (key: keyof typeof ERating2026) => {
-    setIsScoring(false);
-    startCycle(key);
-  };
-
   const cleanupCycle: () => void = () => {
-    setCurrentRating(null);
-    setIsScoring(false);
-    setSelectedAccuracy(null);
-    setInCycle(false);
-    setScorePosPressed(new Array(locations.length).fill(false));
-    setScoreLocation(null);
     cycleDuration.current = 0;
     startCycleTime.current = 0;
   };
 
-  const endCycle: (scorePos: EScoreLocation2026, accuracy: keyof typeof EAccuracy) => void = (
-    scorePos: EScoreLocation2026,
-    accuracyKey: keyof typeof EAccuracy
-  ) => {
-    if (!currentRating || (!scorePos && isScoring) || !accuracyKey) {
-      return;
-    }
+  const showFuelIcon: (x: number, y: number) => void = (x: number, y: number): void => {
+    setFuelIconVisible(true);
+    const newFuelIconCoords = {
+      x,
+      y,
+    };
+    setFuelIconCoords(newFuelIconCoords);
+  };
 
-    let accuracy = 0;
-    switch (accuracyKey) {
-      case 'quarter':
-        accuracy = 0.25;
-        break;
-      case 'half':
-        accuracy = 0.5;
-        break;
-      case 'threeQuarter':
-        accuracy = 0.75;
-        break;
-      case 'full':
-        accuracy = 1;
-    }
+  const score: () => void = () => {
+    console.log(cycleDuration);
+    log.addScoreEvent(ECapacity2026[selectedCapacity], cycleDuration.current);
+    cleanupCycle();
+  };
 
-    if (isScoring) {
-      console.log(cycleDuration);
-      log.addScoreEvent(scorePos, currentRating, accuracy, cycleDuration.current);
-    } else {
-      console.log(cycleDuration);
-      log.addPassingEvent(currentRating, accuracy, cycleDuration.current);
-    }
+  const pass: () => void = () => {
+    console.log(cycleDuration);
+    log.addPassingEvent(ECapacity2026[selectedCapacity], cycleDuration.current);
     cleanupCycle();
   };
 
@@ -99,7 +64,7 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
 
     cleanupCycle();
 
-    navigation.navigate('Endgame');
+    navigation.navigate('EndgameOne');
   };
 
   return (
@@ -120,112 +85,75 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
       <Box style={styles.images}>
         <HStack divider={<Divider />} spacing={20} style={{ marginLeft: 20 }}>
           <VStack spacing={5}>
-            <Text variant="h6">Scoring:</Text>
+            <Text variant="h6">Capacity:</Text>
             <ButtonList
-              enumProp={ERating2026}
-              onPress={startScoring}
-              onPressIn={() => {
-                if (startCycleTime.current === 0) {
-                  startCycleTime.current = timer.getTimeSeconds();
-                }
+              enumProp={ECapacity2026}
+              onPress={(key: keyof typeof ECapacity2026) => {
+                setSelectedCapacity(key);
               }}
-              onPressOut={() => {
-                cycleDuration.current += timer.getTimeSeconds() - startCycleTime.current;
-                startCycleTime.current = 0;
-              }}
-              disabled={isScoring == false && inCycle == true}
+              selectedKey={selectedCapacity}
             />
           </VStack>
-          <VStack spacing={5}>
-            <Text variant="h6">Passing:</Text>
-            <ButtonList
-              enumProp={ERating2026}
-              onPress={startPassing}
-              onPressIn={() => {
-                if (startCycleTime.current === 0) {
-                  startCycleTime.current = timer.getTimeSeconds();
-                }
-              }}
-              onPressOut={() => {
-                cycleDuration.current += timer.getTimeSeconds() - startCycleTime.current;
-                startCycleTime.current = 0;
-              }}
-              disabled={isScoring == true}
-            />
-          </VStack>
-          {inCycle && isScoring ? (
-            <VStack>
-              <Text variant="h6">Location:</Text>
-              <Box style={{ width: 450 }}></Box>
-            </VStack>
-          ) : (
-            <></>
-          )}
-          {inCycle ? (
-            <VStack spacing={5}>
-              <Text variant="h6">Accuracy:</Text>
-              <ButtonList
-                enumProp={EAccuracy}
-                onPress={(key: keyof typeof EAccuracy) => {
-                  setSelectedAccuracy(key);
-                  endCycle(scoreLocation, key);
-                }}
-                selectedKey={selectedAccuracy}
-              />
-            </VStack>
-          ) : (
-            <></>
-          )}
         </HStack>
-        {inCycle && isScoring ? (
+        <Image
+          alt="Field"
+          source={assignment.alliance === 'BLUE' ? blueFieldImage : redFieldImage}
+          style={styles.field}
+        />
+        <Pressable
+          style={styles.scorePressable}
+          onPressIn={(event: GestureResponderEvent): void => {
+            if (startCycleTime.current === 0) {
+              startCycleTime.current = timer.getTimeSeconds();
+            }
+            const x: number = event.nativeEvent.locationX + styles.scorePressable.left;
+            const y: number = event.nativeEvent.locationY;
+            showFuelIcon(x - 25, y - 25);
+          }}
+          onPressOut={() => {
+            cycleDuration.current += timer.getTimeSeconds() - startCycleTime.current;
+            startCycleTime.current = 0;
+            score();
+            setTimeout((): void => setFuelIconVisible(false), 500);
+          }}
+          pressEffect={'none'}
+        />
+        <Pressable
+          style={styles.passPressable}
+          onPressIn={(event: GestureResponderEvent): void => {
+            if (startCycleTime.current === 0) {
+              startCycleTime.current = timer.getTimeSeconds();
+            }
+            const x: number = event.nativeEvent.locationX + styles.passPressable.left;
+            const y: number = event.nativeEvent.locationY;
+            showFuelIcon(x - 25, y - 25);
+          }}
+          onPressOut={() => {
+            cycleDuration.current += timer.getTimeSeconds() - startCycleTime.current;
+            startCycleTime.current = 0;
+            pass();
+            setTimeout((): void => setFuelIconVisible(false), 500);
+          }}
+          pressEffect={'none'}
+        />
+        {fuelIconVisible && (
           <Image
-            alt="Reef"
-            source={assignment.alliance === 'BLUE' ? blueFieldImage : redFieldImage}
-            style={styles.field}
+            alt="note"
+            source={fuelImage}
+            style={{
+              ...styles.fuelIcon,
+              left: FuelIconCoords.x,
+              top: FuelIconCoords.y,
+            }}
           />
-        ) : (
-          <></>
-        )}
-        {inCycle && isScoring ? (
-          (assignment.alliance === 'BLUE' ? bluePosStyles : redPosStyles).map((style, i) => {
-            return (
-              <Pressable
-                key={i}
-                // eslint-disable-next-line react-native/no-color-literals, react-native/no-inline-styles
-                style={{
-                  ...style,
-                  backgroundColor: scorePosPressed[i] ? 'rgba(0,200,0,0.5)' : 'rgba(0,0,0,0)',
-                }}
-                onPress={() => {
-                  const newArr = new Array(locations.length).fill(false);
-                  newArr[i] = true;
-                  setScorePosPressed(newArr);
-
-                  let scorePos: EScoreLocation2026 = null;
-
-                  locations.forEach((location, i) => {
-                    if (newArr[i]) {
-                      scorePos = location;
-                    }
-                  });
-
-                  setScoreLocation(scorePos);
-
-                  endCycle(scorePos, selectedAccuracy);
-                }}
-              />
-            );
-          })
-        ) : (
-          <></>
         )}
       </Box>
     </Box>
   );
 }
 
-const FieldAreaLeft = 351;
-const FieldAreaTop = 30;
+const FieldAreaLeft = 150;
+const FieldAreaTop = 10;
 const styles = StyleSheet.create({
   button: {
     width: 120,
@@ -238,128 +166,36 @@ const styles = StyleSheet.create({
     margin: 4,
   },
   field: {
-    height: 450,
-    left: 400,
+    height: 470,
+    left: FieldAreaLeft,
     position: 'absolute',
-    top: 30,
-    width: 400,
+    top: FieldAreaTop,
+    width: 790,
     objectFit: 'fill',
   },
   images: {
     marginTop: 10,
   },
-  redLeftTrench: {
-    height: 110,
-    left: FieldAreaLeft + 270,
+  fuelIcon: {
+    resizeMode: 'stretch',
+    position: 'absolute',
+    height: 50,
+    width: 50,
+  },
+  scorePressable: {
+    height: 470,
+    left: FieldAreaLeft,
     position: 'absolute',
     top: FieldAreaTop,
-    width: 180,
-    backgroundColor: 'rgba(255, 0, 0, 0.5)',
+    width: 230,
+    //backgroundColor: 'rgba(255, 0, 0, 0.5)',
   },
-  redHub: {
-    height: 230,
-    left: FieldAreaLeft + 270,
-    position: 'absolute',
-    top: FieldAreaTop + 110,
-    width: 180,
-    backgroundColor: 'rgba(0, 255, 0, 0.5)',
-  },
-  redMidfield: {
-    height: 350,
-    left: FieldAreaLeft + 50,
-    position: 'absolute',
-    top: FieldAreaTop,
-    width: 220,
-    backgroundColor: 'rgba(0, 0, 255, 0.5)',
-  },
-  redOutpost: {
-    height: 100,
-    left: FieldAreaLeft + 50,
-    position: 'absolute',
-    top: FieldAreaTop + 350,
-    width: 130,
-    backgroundColor: 'rgba(150, 0, 50, 0.5)',
-  },
-  redRightTrench: {
-    height: 110,
-    left: FieldAreaLeft + 270,
-    position: 'absolute',
-    top: FieldAreaTop + 340,
-    width: 180,
-    backgroundColor: 'rgba(200, 100, 0, 0.5)',
-  },
-  redMidField2: {
-    height: 100,
-    left: FieldAreaLeft + 180,
-    position: 'absolute',
-    top: FieldAreaTop + 350,
-    width: 90,
-    backgroundColor: 'rgba(0, 0, 255, 0.5)',
-  },
-  blueLeftTrench: {
-    height: 110,
-    left: FieldAreaLeft + 50,
-    position: 'absolute',
-    top: FieldAreaTop + 340,
-    width: 180,
-    backgroundColor: 'rgba(255, 0, 0, 0.5)',
-  },
-  blueHub: {
-    height: 230,
-    left: FieldAreaLeft + 50,
-    position: 'absolute',
-    top: FieldAreaTop + 110,
-    width: 180,
-    backgroundColor: 'rgba(0, 255, 0, 0.5)',
-  },
-  blueMidfield: {
-    height: 350,
-    left: FieldAreaLeft + 230,
-    position: 'absolute',
-    top: FieldAreaTop + 100,
-    width: 220,
-    backgroundColor: 'rgba(0, 0, 255, 0.5)',
-  },
-  blueOutpost: {
-    height: 100,
-    left: FieldAreaLeft + 320,
-    position: 'absolute',
-    top: FieldAreaTop,
-    width: 130,
-    backgroundColor: 'rgba(150, 0, 50, 0.5)',
-  },
-  blueRightTrench: {
-    height: 110,
-    left: FieldAreaLeft + 50,
-    position: 'absolute',
-    top: FieldAreaTop,
-    width: 180,
-    backgroundColor: 'rgba(200, 100, 0, 0.5)',
-  },
-  blueMidField2: {
-    height: 100,
+  passPressable: {
+    height: 470,
     left: FieldAreaLeft + 230,
     position: 'absolute',
     top: FieldAreaTop,
-    width: 90,
-    backgroundColor: 'rgba(0, 0, 255, 0.5)',
+    width: 560,
+    //backgroundColor: 'rgba(0, 255, 0, 0.5)',
   },
 });
-
-const redPosStyles = [
-  styles.redLeftTrench,
-  styles.redMidfield,
-  styles.redHub,
-  styles.redOutpost,
-  styles.redRightTrench,
-  styles.redMidField2,
-];
-
-const bluePosStyles = [
-  styles.blueLeftTrench,
-  styles.blueMidfield,
-  styles.blueHub,
-  styles.blueOutpost,
-  styles.blueRightTrench,
-  styles.blueMidField2,
-];
