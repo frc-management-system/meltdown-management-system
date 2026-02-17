@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "scouting-sentinel",
-    "slug": "scouting-sentinel",
+    "name": "FRC3767Scout",
+    "slug": "frc3767scout",
     "version": "2026.0.4",
     "orientation": "landscape",
     "icon": "./assets/logo.png",
