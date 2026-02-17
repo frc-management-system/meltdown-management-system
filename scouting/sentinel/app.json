@@ -33,8 +33,6 @@
     },
     "web": {
       "favicon": "./assets/logo.png"
-    }
-      }
     },
     "plugins": [
       [
