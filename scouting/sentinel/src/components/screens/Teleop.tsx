@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Box, Button, Divider, HStack, Pressable, Text, VStack } from '@react-native-material/core';
+import {Dropdown} from 'react-native-material-dropdown-v2';
 import { GestureResponderEvent, Image, StyleSheet } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import { TLogActions, TRootStackParamList } from '../../../types';
@@ -71,6 +72,10 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
     <Box>
       <HStack spacing={0} style={styles.buttonStack}>
         <Text variant="body1">Team: {assignment?.currentMatch.teamNum ?? ''}</Text>
+        <Dropdown>
+          label="Fuel In Bot"
+          data={ECapacity2026} 
+        </Dropdown>
         <RadioButton.Item
           label="Auto Climb"
           value="autoClimb"
