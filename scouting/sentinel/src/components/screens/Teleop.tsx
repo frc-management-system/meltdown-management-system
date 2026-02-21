@@ -118,6 +118,9 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
           }}
           pressEffect={'none'}
         />
+
+{/* start of section I need to edit */}
+
         <Pressable
           style={styles.passPressable}
           onPressIn={(event: GestureResponderEvent): void => {
@@ -136,6 +139,9 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
           }}
           pressEffect={'none'}
         />
+
+{/* end of section I need to edit */}
+
         {fuelIconVisible && (
           <Image
             alt="note"
