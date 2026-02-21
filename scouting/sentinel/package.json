@@ -19,6 +19,7 @@
     "@tsconfig/react-native": "^3.0.5",
     "eas-cli": "^11.0.2",
     "expo": "~50",
+    "expo-audio": "^1.1.1",
     "expo-dev-client": "~3.3.12",
     "expo-splash-screen": "~0.26.5",
     "expo-status-bar": "~1.11.0",

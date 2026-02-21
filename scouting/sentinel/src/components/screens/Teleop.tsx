@@ -14,8 +14,7 @@ import { ButtonList } from '../basics/ButtonList';
 import { ECapacity2026 } from '../../../../common/types/2026';
 import { useTimer } from '../../contexts/TimerContext';
 import fuelImage from '../../../assets/fuel.png';
-import SoundPlayer from 'react-native-sound-player';
-// import shootDing from '../../../assets/shootDing.mp3';
+
 
 
 export type PTeleop = NativeStackScreenProps<TRootStackParamList, 'Teleop'>;
@@ -70,7 +69,7 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
     navigation.navigate('EndgameOne');
   };
 
-  const shootDing = require('../../../assets/shootDing.mp3');
+  // const shootDing = require('../../../assets/shootDing.mp3');
 
   return (
     <Box>
@@ -116,12 +115,8 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
             showFuelIcon(x - 25, y - 25);
 
 // play sound
-            try {
-  // play the file tone.mp3
-  SoundPlayer.playSoundFile("tone", "mp3");
-            } catch (e) {
-  console.log(`cannot play the sound file`, e)
-}
+
+
       
           }}
           onPressOut={() => {
