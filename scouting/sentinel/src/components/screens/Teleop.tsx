@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Box, Button, Divider, HStack, Pressable, Text, VStack } from '@react-native-material/core';
+import DropDownPicker from 'react-native-dropdown-picker';
 import { GestureResponderEvent, Image, StyleSheet } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import { TLogActions, TRootStackParamList } from '../../../types';
@@ -14,15 +15,19 @@ import { ButtonList } from '../basics/ButtonList';
 import { ECapacity2026 } from '../../../../common/types/2026';
 import { useTimer } from '../../contexts/TimerContext';
 import fuelImage from '../../../assets/fuel.png';
+import { EInitialCapacity2026 } from '../../../../common/types/2026/EInitialCapacity2026';
 
 export type PTeleop = NativeStackScreenProps<TRootStackParamList, 'Teleop'>;
 
 export function Teleop({ navigation }: PTeleop): React.JSX.Element {
   const [autoClimb, setAutoClimb] = useState<'checked' | 'unchecked'>('unchecked');
+  const [firstShot, setFirstShot] = useState(true);
 
-  const [selectedCapacity, setSelectedCapacity] = useState<keyof typeof ECapacity2026>(
-    ECapacity2026.hopper
-  );
+  const [selectedCapacity, setSelectedCapacity] = useState('preload');
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState(EInitialCapacity2026);
+
   const startCycleTime = useRef<number>(0);
   const cycleDuration = useRef<number>(0);
 
@@ -48,6 +53,11 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
   };
 
   const score: () => void = () => {
+    if (firstShot == true)
+    {
+      setFirstShot(false);
+      setOpen(true);
+    }
     console.log(cycleDuration);
     log.addScoreEvent(ECapacity2026[selectedCapacity], cycleDuration.current);
     cleanupCycle();
@@ -67,10 +77,23 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
     navigation.navigate('EndgameOne');
   };
 
+  const capacityList = Object.keys(ECapacity2026);
+
   return (
     <Box>
       <HStack spacing={0} style={styles.buttonStack}>
         <Text variant="body1">Team: {assignment?.currentMatch.teamNum ?? ''}</Text>
+        <DropDownPicker
+          open={open}
+          value={value}
+          items={items}
+          setOpen={setOpen}
+          setValue={setValue}
+          setItems={setItems}
+          containerStyle={{width: 200}}
+          onSelectItem={(value) => {setSelectedCapacity(value['value']);}}
+      
+          />
         <RadioButton.Item
           label="Auto Climb"
           value="autoClimb"
@@ -86,13 +109,13 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
         <HStack divider={<Divider />} spacing={20} style={{ marginLeft: 20 }}>
           <VStack spacing={5}>
             <Text variant="h6">Capacity:</Text>
-            <ButtonList
+            {/* <ButtonList
               enumProp={ECapacity2026}
               onPress={(key: keyof typeof ECapacity2026) => {
                 setSelectedCapacity(key);
               }}
               selectedKey={selectedCapacity}
-            />
+            /> */}
           </VStack>
         </HStack>
         <Image
