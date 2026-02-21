@@ -14,6 +14,9 @@ import { ButtonList } from '../basics/ButtonList';
 import { ECapacity2026 } from '../../../../common/types/2026';
 import { useTimer } from '../../contexts/TimerContext';
 import fuelImage from '../../../assets/fuel.png';
+import SoundPlayer from "react-native-sound-player";
+import shootDing from '../../../assets/shootDing.mp3';
+
 
 export type PTeleop = NativeStackScreenProps<TRootStackParamList, 'Teleop'>;
 
@@ -109,6 +112,10 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
             const x: number = event.nativeEvent.locationX + styles.scorePressable.left;
             const y: number = event.nativeEvent.locationY;
             showFuelIcon(x - 25, y - 25);
+// play sound
+            SoundPlayer.playSoundFile("shootDing", "mp3");
+      
+
           }}
           onPressOut={() => {
             cycleDuration.current += timer.getTimeSeconds() - startCycleTime.current;
