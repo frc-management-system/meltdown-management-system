@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Box, Button, Divider, HStack, Pressable, Text, VStack } from '@react-native-material/core';
-import { GestureResponderEvent, Image, StyleSheet } from 'react-native';
+import { GestureResponderEvent, Image, StyleSheet, Vibration } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import { TLogActions, TRootStackParamList } from '../../../types';
 import { TAssignment } from '../../../../common/types';
@@ -130,12 +130,19 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
             const x: number = event.nativeEvent.locationX + styles.passPressable.left;
             const y: number = event.nativeEvent.locationY;
             showFuelIcon(x - 25, y - 25);
+// vibrate start
+            Vibration.vibrate(400, true);
+
           }}
           onPressOut={() => {
             cycleDuration.current += timer.getTimeSeconds() - startCycleTime.current;
             startCycleTime.current = 0;
             pass();
             setTimeout((): void => setFuelIconVisible(false), 500);
+// vibrate cancel
+
+              Vibration.cancel();
+
           }}
           pressEffect={'none'}
         />
