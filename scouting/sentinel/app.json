@@ -43,6 +43,11 @@
         }
       ]
     ],
-    "owner": "FRC3767Scout"
+    "owner": "frc3767scout",
+    "extra": {
+      "eas": {
+        "projectId": "fb21ab66-11f9-4aa9-a301-597058e7c955"
+      }
+    }
   }
 }
