@@ -1,7 +1,7 @@
 export enum ERating2026 {
-  veryGood = 'very good',
-  good = 'good',
-  average = 'average',
-  bad = 'bad',
-  none = 'none',
+  veryGood = '100%',
+  good = '75%',
+  average = '50%',
+  bad = '25%',
+  none = '0%',
 }
