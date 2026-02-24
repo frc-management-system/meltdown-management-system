@@ -4,3 +4,4 @@ export * from './ECapacity2026';
 export * from './EStartLocation2026';
 export * from './ETowerLevel2026';
 export * from './ERating2026';
+export * from './EAccuracyPercent2026';

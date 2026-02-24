@@ -15,6 +15,7 @@ import { ButtonList } from '../basics/ButtonList';
 import { ECapacity2026 } from '../../../../common/types/2026';
 import { useTimer } from '../../contexts/TimerContext';
 import fuelImage from '../../../assets/fuel.png';
+import { EAccuracyPercent2026 } from '../../../../common/types/2026/EAccuracyPercent2026';
 import { EInitialCapacity2026 } from '../../../../common/types/2026/EInitialCapacity2026';
 
 export type PTeleop = NativeStackScreenProps<TRootStackParamList, 'Teleop'>;
@@ -23,10 +24,13 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
   const [autoClimb, setAutoClimb] = useState<'checked' | 'unchecked'>('unchecked');
   const [firstShot, setFirstShot] = useState(true);
 
+  const [accuracyDisabled, setAccuracyDisabled] = useState(true);
   const [selectedCapacity, setSelectedCapacity] = useState('preload');
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState(EInitialCapacity2026);
+
+  const [shotType, setShotType] = useState('score');
 
   const startCycleTime = useRef<number>(0);
   const cycleDuration = useRef<number>(0);
@@ -52,20 +56,20 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
     setFuelIconCoords(newFuelIconCoords);
   };
 
-  const score: () => void = () => {
+  const score: (accuracyKey: keyof typeof EAccuracyPercent2026) => void = (accuracyKey: keyof typeof EAccuracyPercent2026) => {
     if (firstShot == true)
     {
       setFirstShot(false);
       setOpen(true);
     }
     console.log(cycleDuration);
-    log.addScoreEvent(ECapacity2026[selectedCapacity], cycleDuration.current);
+    log.addScoreEvent(ECapacity2026[selectedCapacity],EAccuracyPercent2026[accuracyKey], cycleDuration.current);
     cleanupCycle();
   };
 
-  const pass: () => void = () => {
+  const pass: (accuracyKey: keyof typeof EAccuracyPercent2026) => void = (accuracyKey: keyof typeof EAccuracyPercent2026) => {
     console.log(cycleDuration);
-    log.addPassingEvent(ECapacity2026[selectedCapacity], cycleDuration.current);
+    log.addPassingEvent(ECapacity2026[selectedCapacity],EAccuracyPercent2026[accuracyKey], cycleDuration.current);
     cleanupCycle();
   };
 
@@ -108,14 +112,23 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
       <Box style={styles.images}>
         <HStack divider={<Divider />} spacing={20} style={{ marginLeft: 20 }}>
           <VStack spacing={5}>
-            <Text variant="h6">Capacity:</Text>
-            {/* <ButtonList
-              enumProp={ECapacity2026}
-              onPress={(key: keyof typeof ECapacity2026) => {
-                setSelectedCapacity(key);
-              }}
-              selectedKey={selectedCapacity}
-            /> */}
+            <Text variant="h6">Accuracy:</Text>
+            <ButtonList
+              enumProp={EAccuracyPercent2026}
+              onPress={(key: keyof typeof EAccuracyPercent2026) => {
+                setAccuracyDisabled(true);
+                if(shotType == 'score')
+                {
+                  score(key);
+                }
+                else
+                {
+                  pass(key);
+                }
+              } 
+              }
+              disabled = {accuracyDisabled}
+            />
           </VStack>
         </HStack>
         <Image
@@ -126,36 +139,60 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
         <Pressable
           style={styles.scorePressable}
           onPressIn={(event: GestureResponderEvent): void => {
-            if (startCycleTime.current === 0) {
-              startCycleTime.current = timer.getTimeSeconds();
+            if (accuracyDisabled)
+            {
+
+              if (startCycleTime.current === 0) {
+                startCycleTime.current = timer.getTimeSeconds();
+              }
+              const x: number = event.nativeEvent.locationX + styles.scorePressable.left;
+              const y: number = event.nativeEvent.locationY;
+              showFuelIcon(x - 25, y - 25);
             }
-            const x: number = event.nativeEvent.locationX + styles.scorePressable.left;
-            const y: number = event.nativeEvent.locationY;
-            showFuelIcon(x - 25, y - 25);
           }}
           onPressOut={() => {
-            cycleDuration.current += timer.getTimeSeconds() - startCycleTime.current;
-            startCycleTime.current = 0;
-            score();
-            setTimeout((): void => setFuelIconVisible(false), 500);
+            if (accuracyDisabled)
+            {
+
+              cycleDuration.current += timer.getTimeSeconds() - startCycleTime.current;
+              startCycleTime.current = 0;
+              setAccuracyDisabled(false);
+              if (shotType != 'score')
+                {
+                  setShotType('score');
+                }
+                setTimeout((): void => setFuelIconVisible(false), 500);
+            }
           }}
           pressEffect={'none'}
         />
         <Pressable
           style={styles.passPressable}
           onPressIn={(event: GestureResponderEvent): void => {
-            if (startCycleTime.current === 0) {
-              startCycleTime.current = timer.getTimeSeconds();
+            if(accuracyDisabled)
+            {
+
+              if (startCycleTime.current === 0) {
+                startCycleTime.current = timer.getTimeSeconds();
+              }
+              const x: number = event.nativeEvent.locationX + styles.passPressable.left;
+              const y: number = event.nativeEvent.locationY;
+              showFuelIcon(x - 25, y - 25);
             }
-            const x: number = event.nativeEvent.locationX + styles.passPressable.left;
-            const y: number = event.nativeEvent.locationY;
-            showFuelIcon(x - 25, y - 25);
           }}
           onPressOut={() => {
-            cycleDuration.current += timer.getTimeSeconds() - startCycleTime.current;
-            startCycleTime.current = 0;
-            pass();
-            setTimeout((): void => setFuelIconVisible(false), 500);
+            if(accuracyDisabled)
+            {
+
+              cycleDuration.current += timer.getTimeSeconds() - startCycleTime.current;
+              startCycleTime.current = 0;
+              setAccuracyDisabled(false);
+              if(shotType != 'pass')
+                {
+                  setShotType('pass');
+                }
+                setTimeout((): void => setFuelIconVisible(false), 500);
+            }
           }}
           pressEffect={'none'}
         />
@@ -184,7 +221,7 @@ const styles = StyleSheet.create({
   },
   buttonStack: {
     alignItems: 'center',
-    height: 40,
+    height: 30,
     justifyContent: 'space-evenly',
     margin: 4,
   },
