@@ -4,6 +4,7 @@ import { EEndgameLocation2026 } from './EEndgameLocation2026';
 import { ECapacity2026 } from './ECapacity2026';
 import { EStartLocation2026 } from './EStartLocation2026';
 import { ERating2026 } from './ERating2026';
+import { EAccuracyPercent2026 } from './EAccuracyPercent2026';
 
 class ClassEvent2026 {
   type?: EEventTypes = EEventTypes.start;
@@ -14,7 +15,7 @@ class ClassEvent2026 {
   fireRating?: ERating2026 = ERating2026.none;
   duration?: number = 0;
   preloadFuel?: number = 0;
-  accuracy?: ERating2026 = ERating2026.none;
+  accuracy?: EAccuracyPercent2026 = EAccuracyPercent2026.onehundred;
   autoClimb?: boolean = false;
   notes?: string = '';
   defenseRating?: number = 0;

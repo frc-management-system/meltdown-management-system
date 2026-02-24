@@ -11,6 +11,7 @@ import {
   ETowerLevel2026,
   TEvent2026,
   ECapacity2026,
+  EAccuracyPercent2026
 } from '../../../common/types/2026';
 
 const logDefault: TLog<TEvent2026> = {
@@ -59,18 +60,20 @@ export const useLog: () => TLogActions = (): TLogActions => {
 
       timer.start();
     },
-    addScoreEvent: (capacity: ECapacity2026, duration: number) => {
+    addScoreEvent: (capacity: ECapacity2026, accuracy: EAccuracyPercent2026, duration: number) => {
       log.current.events.push({
         type: EEventTypes.score,
         capacity,
+        accuracy,
         duration,
         timestamp: timer.getTimeSeconds(),
       });
     },
-    addPassingEvent: (capacity: ECapacity2026, duration: number) => {
+    addPassingEvent: (capacity: ECapacity2026, accuracy: EAccuracyPercent2026, duration: number) => {
       log.current.events.push({
         type: EEventTypes.pass,
         capacity,
+        accuracy,
         duration,
         timestamp: timer.getTimeSeconds(),
       });
@@ -88,7 +91,6 @@ export const useLog: () => TLogActions = (): TLogActions => {
       defenseRating: number,
       towerLevel: ETowerLevel2026,
       rating: ERating2026,
-      accuracy: ERating2026
     ) => {
       log.current.events.push({
         type: EEventTypes.endgame,
@@ -97,7 +99,6 @@ export const useLog: () => TLogActions = (): TLogActions => {
         defenseRating,
         towerLevel,
         fireRating: rating,
-        accuracy,
         timestamp: timer.getTimeSeconds(),
       });
       console.log(log.current);
