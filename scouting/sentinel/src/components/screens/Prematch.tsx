@@ -17,7 +17,7 @@ export function Prematch({ navigation }: PPrematchScreen): React.JSX.Element {
   const locations: EStartLocation2026[] = Object.values(EStartLocation2026);
 
   const [startPosPressed, setStartPosPressed] = useState(new Array(locations.length).fill(false));
-  const [preloadFuel, setPreloadFuel] = useState('0');
+  const [preloadFuel, setPreloadFuel] = useState('8');
   const log = useLog();
   const assignment = useAssignment();
 
@@ -36,7 +36,6 @@ export function Prematch({ navigation }: PPrematchScreen): React.JSX.Element {
 
     setStartPosPressed(new Array(locations.length).fill(false));
     setPreloadFuel('0');
-
     log.addStartEvent(startPos, +preloadFuel);
 
     navigation.navigate('Teleop');
