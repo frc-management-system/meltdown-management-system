@@ -31,7 +31,7 @@ export type PEndgameScreenProps = NativeStackScreenProps<TRootStackParamList, 'E
 
 export function EndgameTwo({
   route: {
-    params: { accuracyRating, defenseRating, firingRating },
+    params: { fuelPlowRating, defenseRating, firingRating },
   },
   navigation,
 }: PEndgameScreenProps): React.JSX.Element {
@@ -65,7 +65,7 @@ export function EndgameTwo({
       +defenseRating,
       towerLevel,
       firingRating,
-      accuracyRating
+      fuelPlowRating
     );
 
     assignmentDispatch({

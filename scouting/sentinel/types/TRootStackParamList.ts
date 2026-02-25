@@ -8,7 +8,7 @@ export type TRootStackParamList = {
   Prematch: undefined;
   Teleop: { initialRobotState: ERobotState };
   EndgameOne: undefined;
-  EndgameTwo: { firingRating: ERating2026; accuracyRating: ERating2026; defenseRating: String };
+  EndgameTwo: { firingRating: ERating2026; fuelPlowRating: ERating2026; defenseRating: String };
   QRShow: { routeName: keyof TRootStackParamList; path: string };
   EditAssignment: undefined;
 };
