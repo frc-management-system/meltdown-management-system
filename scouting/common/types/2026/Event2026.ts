@@ -19,6 +19,7 @@ class ClassEvent2026 {
   autoClimb?: boolean = false;
   notes?: string = '';
   defenseRating?: number = 0;
+  fuelPlowRating?: ERating2026 = ERating2026.none;
 }
 
 export interface TEvent2026 extends ClassEvent2026 {}

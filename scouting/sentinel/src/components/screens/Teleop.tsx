@@ -16,7 +16,7 @@ import { ECapacity2026 } from '../../../../common/types/2026';
 import { useTimer } from '../../contexts/TimerContext';
 import fuelImage from '../../../assets/fuel.png';
 import { EAccuracyPercent2026 } from '../../../../common/types/2026/EAccuracyPercent2026';
-import { EInitialCapacity2026 } from '../../../../common/types/2026/EInitialCapacity2026';
+import { AInitialCapacity2026 } from '../../../../common/types/2026/AInitialCapacity2026';
 
 export type PTeleop = NativeStackScreenProps<TRootStackParamList, 'Teleop'>;
 
@@ -28,7 +28,7 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
   const [selectedCapacity, setSelectedCapacity] = useState('preload');
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
-  const [items, setItems] = useState(EInitialCapacity2026);
+  const [items, setItems] = useState(AInitialCapacity2026);
 
   const [shotType, setShotType] = useState('score');
 

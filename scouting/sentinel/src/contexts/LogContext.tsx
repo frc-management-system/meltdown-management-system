@@ -91,6 +91,7 @@ export const useLog: () => TLogActions = (): TLogActions => {
       defenseRating: number,
       towerLevel: ETowerLevel2026,
       rating: ERating2026,
+      fuelPlowRating: ERating2026
     ) => {
       log.current.events.push({
         type: EEventTypes.endgame,
@@ -99,6 +100,7 @@ export const useLog: () => TLogActions = (): TLogActions => {
         defenseRating,
         towerLevel,
         fireRating: rating,
+        fuelPlowRating: fuelPlowRating,
         timestamp: timer.getTimeSeconds(),
       });
       console.log(log.current);

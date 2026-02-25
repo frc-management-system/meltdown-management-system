@@ -13,10 +13,10 @@ export type PEndgameScreenProps = NativeStackScreenProps<TRootStackParamList, 'E
 export function EndgameOne({ navigation }: PEndgameScreenProps): React.JSX.Element {
   const [defenseRating, setDefenseRating] = useState<string>('0');
   const [firingRating, setFiringRating] = useState<ERating2026>();
-  const [accuracyRating, setAccuracyRating] = useState<ERating2026>();
+  const [fuelPlowRating, setFuelPlowRating] = useState<ERating2026>();
 
   const onSubmit = () => {
-    navigation.navigate('EndgameTwo', { firingRating, accuracyRating, defenseRating });
+    navigation.navigate('EndgameTwo', { firingRating, fuelPlowRating, defenseRating });
   };
 
   return (
@@ -33,13 +33,13 @@ export function EndgameOne({ navigation }: PEndgameScreenProps): React.JSX.Eleme
           }}
         />
         <Divider />
-        <Text variant="h6">Accuracy Rating:</Text>
+        <Text variant="h6">Fuel Plowing Rating:</Text>
         <RadioButtonList
           labels={Object.values(ERating2026)}
           direction="row"
-          selected={accuracyRating}
+          selected={fuelPlowRating}
           setSelected={(value: ERating2026) => {
-            setAccuracyRating(value);
+            setFuelPlowRating(value);
           }}
         />
         <Divider />
