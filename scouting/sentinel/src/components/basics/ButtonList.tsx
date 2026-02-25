@@ -1,4 +1,5 @@
 import { VStack, Pressable, Text } from '@react-native-material/core';
+import { string } from 'prop-types';
 import React, { useState } from 'react';
 
 export type PButtonList<EnumType extends object> = {
@@ -22,8 +23,8 @@ export function ButtonList<EnumType extends object>({
   const [activeKey, setActiveKey] = useState<string | null>(null);
 
   return (
-    <VStack spacing={20}>
-      {(Object.keys(enumProp) as Array<keyof EnumType>).map((key) => {
+    <VStack spacing={15}>
+      {(Object.values(enumProp) as Array<keyof EnumType>).filter((value)=> typeof value === 'string').map((key) => {
         const stringKey = String(key);
         // Highlight if currently being pressed OR if it is the selected item
         const isFilled = activeKey === stringKey || selectedKey === key;
@@ -40,6 +41,7 @@ export function ButtonList<EnumType extends object>({
             }}
             onPressOut={() => {
               setActiveKey(null);
+              selectedKey = null;
               if (onPressOut) {
                 onPressOut();
               }
@@ -50,7 +52,7 @@ export function ButtonList<EnumType extends object>({
               }
             }}
             style={{
-              padding: 20,
+              padding: 10,
               borderRadius: 12,
               borderWidth: 2,
               borderColor: disabled ? '#d3d3d3' : '#6200EE',
@@ -64,7 +66,7 @@ export function ButtonList<EnumType extends object>({
                 color: isFilled || disabled ? '#FFFFFF' : '#6200EE',
               }}
             >
-              {`${enumProp[key]}`}
+              {`${String(enumProp[key])}`}
             </Text>
           </Pressable>
         );
