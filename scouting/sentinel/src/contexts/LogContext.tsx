@@ -69,11 +69,10 @@ export const useLog: () => TLogActions = (): TLogActions => {
         timestamp: timer.getTimeSeconds(),
       });
     },
-    addPassingEvent: (capacity: ECapacity2026, accuracy: EAccuracyPercent2026, duration: number) => {
+    addPassingEvent: (capacity: ECapacity2026, duration: number) => {
       log.current.events.push({
         type: EEventTypes.pass,
         capacity,
-        accuracy,
         duration,
         timestamp: timer.getTimeSeconds(),
       });

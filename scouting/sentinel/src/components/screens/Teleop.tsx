@@ -30,8 +30,6 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
   const [value, setValue] = useState(null);
   const [items, setItems] = useState(AInitialCapacity2026);
 
-  const [shotType, setShotType] = useState('score');
-
   const startCycleTime = useRef<number>(0);
   const cycleDuration = useRef<number>(0);
 
@@ -67,9 +65,9 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
     cleanupCycle();
   };
 
-  const pass: (accuracyKey: keyof typeof EAccuracyPercent2026) => void = (accuracyKey: keyof typeof EAccuracyPercent2026) => {
+  const pass: () => void = () => {
     console.log(cycleDuration);
-    log.addPassingEvent(ECapacity2026[selectedCapacity],EAccuracyPercent2026[accuracyKey], cycleDuration.current);
+    log.addPassingEvent(ECapacity2026[selectedCapacity],cycleDuration.current);
     cleanupCycle();
   };
 
@@ -117,14 +115,7 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
               enumProp={EAccuracyPercent2026}
               onPress={(key: keyof typeof EAccuracyPercent2026) => {
                 setAccuracyDisabled(true);
-                if(shotType == 'score')
-                {
-                  score(key);
-                }
-                else
-                {
-                  pass(key);
-                }
+                score(key);
               } 
               }
               disabled = {accuracyDisabled}
@@ -139,30 +130,22 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
         <Pressable
           style={styles.scorePressable}
           onPressIn={(event: GestureResponderEvent): void => {
-            if (accuracyDisabled)
-            {
-
               if (startCycleTime.current === 0) {
                 startCycleTime.current = timer.getTimeSeconds();
               }
               const x: number = event.nativeEvent.locationX + styles.scorePressable.left;
               const y: number = event.nativeEvent.locationY;
               showFuelIcon(x - 25, y - 25);
-            }
           }}
           onPressOut={() => {
-            if (accuracyDisabled)
-            {
-
               cycleDuration.current += timer.getTimeSeconds() - startCycleTime.current;
               startCycleTime.current = 0;
-              setAccuracyDisabled(false);
-              if (shotType != 'score')
-                {
-                  setShotType('score');
-                }
-                setTimeout((): void => setFuelIconVisible(false), 500);
-            }
+              if(accuracyDisabled)
+              {
+                setAccuracyDisabled(false);
+              }
+
+              setTimeout((): void => setFuelIconVisible(false), 500);
           }}
           pressEffect={'none'}
         />
@@ -171,7 +154,6 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
           onPressIn={(event: GestureResponderEvent): void => {
             if(accuracyDisabled)
             {
-
               if (startCycleTime.current === 0) {
                 startCycleTime.current = timer.getTimeSeconds();
               }
@@ -186,12 +168,9 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
 
               cycleDuration.current += timer.getTimeSeconds() - startCycleTime.current;
               startCycleTime.current = 0;
-              setAccuracyDisabled(false);
-              if(shotType != 'pass')
-                {
-                  setShotType('pass');
-                }
-                setTimeout((): void => setFuelIconVisible(false), 500);
+              pass();
+              setTimeout((): void => setFuelIconVisible(false), 500);
+                
             }
           }}
           pressEffect={'none'}

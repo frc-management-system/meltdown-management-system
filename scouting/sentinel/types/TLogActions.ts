@@ -10,7 +10,7 @@ import {
 export type TLogActions = {
   addStartEvent: (location: EStartLocation2026, preloadFuel: number) => void;
   addScoreEvent: (capacity: ECapacity2026, accuracy: EAccuracyPercent2026, duration: number) => void;
-  addPassingEvent: (capacity: ECapacity2026, accuracy: EAccuracyPercent2026, duration: number) => void;
+  addPassingEvent: (capacity: ECapacity2026, duration: number) => void;
   addAutoEvent: (autoClimb: boolean) => void;
   addEndgameEvent: (
     location: EEndgameLocation2026,
