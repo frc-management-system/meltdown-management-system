@@ -55,6 +55,7 @@ export function management() {
         const repetitiveHeaders: Array<keyof TLog<{}>> = [
           'matchNum',
           'alliance',
+          'scouter',
           'alliancePos',
           'teamNum',
         ];
