@@ -53,6 +53,7 @@ def load_match_data(object_name: str) -> dict:
       item = {
       "event": event_name,
       "team-match": key,
+      'scouter': line['scouter'],
       "alliancePosition": f"{line['alliance'][0]}{line['alliancePos']}",
       "startLocation": "",
       "autoClimb": 0, 
