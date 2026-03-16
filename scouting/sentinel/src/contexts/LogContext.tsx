@@ -90,8 +90,10 @@ export const useLog: () => TLogActions = (): TLogActions => {
       defenseRating: number,
       towerLevel: ETowerLevel2026,
       rating: ERating2026,
-      fuelPlowRating: ERating2026
+      fuelPlowRating: ERating2026,
+      scoutName: string
     ) => {
+      log.current.scouter = scoutName;
       log.current.events.push({
         type: EEventTypes.endgame,
         location,

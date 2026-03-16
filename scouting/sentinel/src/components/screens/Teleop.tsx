@@ -122,20 +122,17 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
             />
           </VStack>
         </HStack>
-        <Image
-          alt="Field"
-          source={assignment.alliance === 'BLUE' ? blueFieldImage : redFieldImage}
-          style={styles.field}
-        />
-        <Pressable
+        <Button
+          title="Shoot"
           style={styles.scorePressable}
+          hitSlop={{top:200,bottom:20,left:20,right:20}}
           onPressIn={(event: GestureResponderEvent): void => {
               if (startCycleTime.current === 0) {
                 startCycleTime.current = timer.getTimeSeconds();
               }
-              const x: number = event.nativeEvent.locationX + styles.scorePressable.left;
-              const y: number = event.nativeEvent.locationY;
-              showFuelIcon(x - 25, y - 25);
+              //const x: number = event.nativeEvent.locationX + styles.scorePressable.left;
+              //const y: number = event.nativeEvent.locationY;
+              //showFuelIcon(x - 25, y - 25);
           }}
           onPressOut={() => {
               cycleDuration.current += timer.getTimeSeconds() - startCycleTime.current;
@@ -147,9 +144,11 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
 
               setTimeout((): void => setFuelIconVisible(false), 500);
           }}
-          pressEffect={'none'}
+          pressEffect={'highlight'}
+          
         />
-        <Pressable
+        <Button
+          title="Pass"
           style={styles.passPressable}
           onPressIn={(event: GestureResponderEvent): void => {
             if(accuracyDisabled)
@@ -157,9 +156,9 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
               if (startCycleTime.current === 0) {
                 startCycleTime.current = timer.getTimeSeconds();
               }
-              const x: number = event.nativeEvent.locationX + styles.passPressable.left;
-              const y: number = event.nativeEvent.locationY;
-              showFuelIcon(x - 25, y - 25);
+              //const x: number = event.nativeEvent.locationX + styles.passPressable.left;
+              //const y: number = event.nativeEvent.locationY;
+              //showFuelIcon(x - 25, y - 25);
             }
           }}
           onPressOut={() => {
@@ -173,7 +172,7 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
                 
             }
           }}
-          pressEffect={'none'}
+          pressEffect={'highlight'}
         />
         {fuelIconVisible && (
           <Image
@@ -221,20 +220,20 @@ const styles = StyleSheet.create({
     height: 50,
     width: 50,
   },
-  scorePressable: {
-    height: 470,
+  passPressable: {
+    padding: 30,
     left: FieldAreaLeft,
     position: 'absolute',
-    top: FieldAreaTop,
-    width: 230,
+    top: FieldAreaTop + 300,
+    width: 200,
     //backgroundColor: 'rgba(255, 0, 0, 0.5)',
   },
-  passPressable: {
-    height: 470,
-    left: FieldAreaLeft + 230,
+  scorePressable: {
+    padding: 30,
+    left: FieldAreaLeft + 500,
     position: 'absolute',
-    top: FieldAreaTop,
-    width: 560,
+    top: FieldAreaTop + 300,
+    width: 200,
     //backgroundColor: 'rgba(0, 255, 0, 0.5)',
   },
 });

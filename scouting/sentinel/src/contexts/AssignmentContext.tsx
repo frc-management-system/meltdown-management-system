@@ -7,6 +7,7 @@ const assignmentDefault: TAssignment = {
   event: '',
   matches: [],
   alliancePos: '',
+  scouterList: []
 };
 
 const AssignmentContext: React.Context<TAssignment> = createContext<TAssignment>(assignmentDefault);
@@ -51,6 +52,7 @@ export const assignmentReducer: React.Reducer<TAssignment, TAssignmentAction> = 
         alliance: inputAssignment.a,
         alliancePos: inputAssignment.ap,
         matches: [],
+        scouterList: []
       };
 
       newAssignment.matches = inputAssignment.m.map(
@@ -60,6 +62,8 @@ export const assignmentReducer: React.Reducer<TAssignment, TAssignmentAction> = 
           scouter: inputMatch.s,
         })
       );
+
+      newAssignment.scouterList = [...new Set(inputAssignment.m.map(item => item.s))]
 
       const match: TAssignmentMatch | undefined = newAssignment.matches.find(
         (x: TAssignmentMatch): boolean => x.matchNum === (action?.matchNum ?? 0)

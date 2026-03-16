@@ -35,7 +35,7 @@ export function Prematch({ navigation }: PPrematchScreen): React.JSX.Element {
     });
 
     setStartPosPressed(new Array(locations.length).fill(false));
-    setPreloadFuel('0');
+    setPreloadFuel('8');
     log.addStartEvent(startPos, +preloadFuel);
 
     navigation.navigate('Teleop');
