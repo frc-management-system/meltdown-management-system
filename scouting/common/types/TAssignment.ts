@@ -5,4 +5,5 @@ export type TAssignment = {
   currentMatch?: TAssignmentMatch;
   event: string;
   matches: TAssignmentMatch[];
+  scouterList: string[];
 } & TAssignmentBase;
