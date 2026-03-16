@@ -21,9 +21,11 @@ import { RadioButtonList } from '../basics/RadioButtonList';
 import { EAssignmentActionType, TRootStackParamList } from '../../../types';
 import { EEndgameLocation2026, ETowerLevel2026 } from '../../../../common/types/2026';
 import { useLog, useSaveLog } from '../../contexts/LogContext';
-import { useAssignmentDispatch } from '../../contexts/AssignmentContext';
+import { useAssignment, useAssignmentDispatch } from '../../contexts/AssignmentContext';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import towerImage from '../../../assets/tower.png';
+import DropDownPicker from 'react-native-dropdown-picker';
+import { TAssignmentAction } from '../../../types';
 
 const windowDimensions = Dimensions.get('window');
 
@@ -36,6 +38,11 @@ export function EndgameTwo({
   navigation,
 }: PEndgameScreenProps): React.JSX.Element {
   const locations: EEndgameLocation2026[] = Object.values(EEndgameLocation2026);
+  interface nameList {
+    label: string;
+    value: string; 
+}
+  
 
   const [endPosPressed, setEndPosPressed] = useState(new Array(locations.length).fill(false));
 
@@ -43,13 +50,32 @@ export function EndgameTwo({
 
   const [notes, setNotes] = useState('');
 
+  const [open, setOpen] = useState(false);
+ 
+
+
   const log = useLog();
   const saveLog = useSaveLog();
+  const assignment = useAssignment();
 
+  const scoutList: nameList[] = assignment.scouterList.map((name) => { return {label: name, value: name}} );
+  const [items, setItems] = useState(scoutList);
+  const [scouterName, setScouterName] = useState(assignment.currentMatch.scouter);
+  const [value, setValue] = useState(assignment.currentMatch.scouter);
   const assignmentDispatch = useAssignmentDispatch();
 
   const onSubmit = () => {
     let endPos: EEndgameLocation2026 = EEndgameLocation2026.none;
+    console.log(scouterName + "," + assignment.currentMatch.matchNum);
+    const action: TAssignmentAction = {
+      type: EAssignmentActionType.edit,
+      editData: {
+        scouter: scouterName,
+        matchNum: assignment.currentMatch.matchNum,
+      },
+    };
+
+    assignmentDispatch(action);
 
     locations.forEach((location, i) => {
       if (endPosPressed[i]) {
@@ -65,7 +91,8 @@ export function EndgameTwo({
       +defenseRating,
       towerLevel,
       firingRating,
-      fuelPlowRating
+      fuelPlowRating,
+        scouterName
     );
 
     assignmentDispatch({
@@ -108,6 +135,18 @@ export function EndgameTwo({
                 onChangeText={setNotes}
                 value={notes}
               />
+              <Divider />
+              <Text variant="h6">Update Scouter Name If Needed:</Text>
+              <DropDownPicker
+                open={open}
+                value={value}
+                items={items}
+                setOpen={setOpen}
+                setValue={setValue}
+                setItems={setItems}
+                containerStyle={{width: 200}}
+                onSelectItem={(value) => {setScouterName(value['value']);}}
+                />
             </VStack>
             {towerLevel === ETowerLevel2026.none ? (
               <></>

@@ -18,6 +18,7 @@ export type TLogActions = {
     defenseRating: number,
     towerLevel: ETowerLevel2026,
     rating: ERating2026,
-    fuelPlowRating: ERating2026
+    fuelPlowRating: ERating2026,
+    scoutName: string
   ) => void;
 };
