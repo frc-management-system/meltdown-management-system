@@ -248,7 +248,7 @@ export function management() {
         tabletAssignments[i / 2].m.push({
           m: matchNum,
           t: Number(fields[i + 1]),
-          s: fields[i + 2],
+          s: fields[i + 2].trim(),
         });
       }
     });
