@@ -92,7 +92,7 @@ export function EndgameTwo({
       towerLevel,
       firingRating,
       fuelPlowRating,
-        scouterName
+      `\"${scouterName}\"`
     );
 
     assignmentDispatch({

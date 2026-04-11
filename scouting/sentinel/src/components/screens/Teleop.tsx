@@ -121,11 +121,12 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
               disabled = {accuracyDisabled}
             />
           </VStack>
-        </HStack>
+        </HStack> 
         <Button
           title="Shoot"
           style={styles.scorePressable}
           hitSlop={{top:200,bottom:20,left:20,right:20}}
+          pressableContainerStyle={{overflow: 'visible'}}
           onPressIn={(event: GestureResponderEvent): void => {
               if (startCycleTime.current === 0) {
                 startCycleTime.current = timer.getTimeSeconds();
@@ -229,11 +230,11 @@ const styles = StyleSheet.create({
     //backgroundColor: 'rgba(255, 0, 0, 0.5)',
   },
   scorePressable: {
+    width: 200,
     padding: 30,
     left: FieldAreaLeft + 500,
     position: 'absolute',
     top: FieldAreaTop + 300,
-    width: 200,
     //backgroundColor: 'rgba(0, 255, 0, 0.5)',
   },
 });
