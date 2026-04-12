@@ -125,8 +125,7 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
         <Button
           title="Shoot"
           style={styles.scorePressable}
-          hitSlop={{top:200,bottom:20,left:20,right:20}}
-          pressableContainerStyle={{overflow: 'visible'}}
+          contentContainerStyle={{width:200, height:100}}
           onPressIn={(event: GestureResponderEvent): void => {
               if (startCycleTime.current === 0) {
                 startCycleTime.current = timer.getTimeSeconds();
@@ -151,6 +150,7 @@ export function Teleop({ navigation }: PTeleop): React.JSX.Element {
         <Button
           title="Pass"
           style={styles.passPressable}
+          contentContainerStyle={{width:200, height:100}}
           onPressIn={(event: GestureResponderEvent): void => {
             if(accuracyDisabled)
             {
@@ -222,7 +222,6 @@ const styles = StyleSheet.create({
     width: 50,
   },
   passPressable: {
-    padding: 30,
     left: FieldAreaLeft,
     position: 'absolute',
     top: FieldAreaTop + 300,
@@ -231,7 +230,6 @@ const styles = StyleSheet.create({
   },
   scorePressable: {
     width: 200,
-    padding: 30,
     left: FieldAreaLeft + 500,
     position: 'absolute',
     top: FieldAreaTop + 300,
