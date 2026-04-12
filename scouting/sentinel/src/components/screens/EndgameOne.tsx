@@ -23,7 +23,7 @@ export function EndgameOne({ navigation }: PEndgameScreenProps): React.JSX.Eleme
     <Box style={styles.autoContainer}>
       <Text variant="h4">Endgame One</Text>
       <VStack>
-        <Text variant="h6">Firing Rating:</Text>
+        <Text variant="h6">Driver Rating:</Text>
         <RadioButtonList
           labels={Object.values(ERating2026)}
           direction="row"
