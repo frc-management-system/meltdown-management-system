@@ -6,9 +6,6 @@ Before building a publishing any artifacts, run this command:
 
 This will update the version in a few files like the `package.json` so that the resulting builds have the correctly labeled version.
 
-## Dashboard
-Whenever a change is made to Dashboard, and pushed to main a GitHub workflow will run and update the Github Pages with the latest code
-
 ## Sentinel
 Sentinel is built using Expo, you can access the builds [here](https://expo.dev/accounts/systemmeltdown2357/projects/scouting-sentinel)
 

@@ -1,7 +1,0 @@
-﻿teamNum,matchNum,alliancePosition ,startLocation,autoIntake,aCoralL1,aCoralL2,aCoralL3,aCoralL4,autoLeave,algaeFloor,algaeProcessor,algaeBarge,algaeMiss,algaeClear,coralFloor,coralStation,coralL1,coralL2,coralL3,coralL4,coralMiss,end,defenseRating,notes
-1730,1,B1,right,2,,,,3,1,2,2,,0,2,,8,,,,8,0,deep,3,
-1986,1,B2,center,1,,,2,,1,0,0,0,0,0,,8,5,2,,,1,shallow,2,
-1987,1,B3,left,3,,,,4,1,3,0,2,1,2,,10,,3,5,2,0,deep,4,
-1710,1,R1,right,3,,4,,,1,,,,,,,,,,,,,park,3,
-4522,1,R2,right,4,5,,,,1,,,,,,,,,,,,,deep,5,
-2001,1,R3,center,,,,,,,1,,,1,,,3,3,,,,,deep,1,
