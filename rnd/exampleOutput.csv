@@ -1,8 +1,0 @@
-event,team-match,alliancePosition,startLocation,autoLeave,end,defenseRating,algaeClear,notes,coralPickup,autoCoral,coralFloor,coralStation,algaeFloor,coralMiss,algaeMiss,coralL1,coralL2,coralL3,coralL4,aCoralL1,aCoralL2,aCoralL3,aCoralL4,algaeBarge,algaeProcessor
-arkansas,2357-1,R1,right,0,park,2,0,,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1
-arkansas,1987-1,R2,center,0,park,3,4,,6,0,5,1,10,1,1,4,2,0,0,0,0,0,0,5,4
-arkansas,1987-2,R2,center,0,shallow,1,5,,10,1,6,4,13,0,3,7,3,0,0,1,0,0,0,1,9
-arkansas,1987-3,R2,center,0,park,3,5,,14,3,8,6,15,1,0,6,3,4,0,3,1,0,0,2,13
-arkansas,1987-4,R2,left,0,deep,2,4,,11,4,1,10,14,0,0,1,5,5,1,0,0,4,0,6,8
-arkansas,1987-5,R2,left,0,park,2,0,,10,1,8,2,10,1,2,0,1,4,4,0,1,1,0,3,5
-arkansas,1987-6,R2,left,0,park,2,0,,10,1,8,2,10,1,2,0,1,4,4,0,1,1,0,3,5
